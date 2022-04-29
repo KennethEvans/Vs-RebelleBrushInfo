@@ -40,7 +40,7 @@
             this.groupBoxBrush1 = new System.Windows.Forms.GroupBox();
             this.tableLayoutPanelGroupBrush1 = new System.Windows.Forms.TableLayoutPanel();
             this.tableLayoutPanelDatabase1 = new System.Windows.Forms.TableLayoutPanel();
-            this.textBoxDatabase1 = new System.Windows.Forms.TextBox();
+            this.textBoxBrush1 = new System.Windows.Forms.TextBox();
             this.buttonFileBrowse1 = new System.Windows.Forms.Button();
             this.labelFile1 = new System.Windows.Forms.Label();
             this.flowLayoutPanelBrush1 = new System.Windows.Forms.FlowLayoutPanel();
@@ -48,7 +48,7 @@
             this.tableLayoutPanelGroupBrush2 = new System.Windows.Forms.TableLayoutPanel();
             this.tableLayoutPanelDatabase2 = new System.Windows.Forms.TableLayoutPanel();
             this.labelFile2 = new System.Windows.Forms.Label();
-            this.textBoxDatabase2 = new System.Windows.Forms.TextBox();
+            this.textBoxCrush2 = new System.Windows.Forms.TextBox();
             this.buttonBrowseFile2 = new System.Windows.Forms.Button();
             this.flowLayoutPanelBrush2 = new System.Windows.Forms.FlowLayoutPanel();
             this.textBoxInfo = new System.Windows.Forms.RichTextBox();
@@ -238,7 +238,7 @@
             this.tableLayoutPanelDatabase1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
             this.tableLayoutPanelDatabase1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tableLayoutPanelDatabase1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-            this.tableLayoutPanelDatabase1.Controls.Add(this.textBoxDatabase1, 1, 0);
+            this.tableLayoutPanelDatabase1.Controls.Add(this.textBoxBrush1, 1, 0);
             this.tableLayoutPanelDatabase1.Controls.Add(this.buttonFileBrowse1, 2, 0);
             this.tableLayoutPanelDatabase1.Controls.Add(this.labelFile1, 0, 0);
             this.tableLayoutPanelDatabase1.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -252,15 +252,15 @@
             this.tableLayoutPanelDatabase1.Size = new System.Drawing.Size(1559, 46);
             this.tableLayoutPanelDatabase1.TabIndex = 2;
             // 
-            // textBoxDatabase1
+            // textBoxBrush1
             // 
-            this.textBoxDatabase1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.textBoxDatabase1.Location = new System.Drawing.Point(91, 2);
-            this.textBoxDatabase1.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.textBoxDatabase1.Name = "textBoxDatabase1";
-            this.textBoxDatabase1.Size = new System.Drawing.Size(1340, 38);
-            this.textBoxDatabase1.TabIndex = 1;
-            this.toolTip.SetToolTip(this.textBoxDatabase1, "Database or SUT file for 1.");
+            this.textBoxBrush1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.textBoxBrush1.Location = new System.Drawing.Point(91, 2);
+            this.textBoxBrush1.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.textBoxBrush1.Name = "textBoxDatabase1";
+            this.textBoxBrush1.Size = new System.Drawing.Size(1340, 38);
+            this.textBoxBrush1.TabIndex = 1;
+            this.toolTip.SetToolTip(this.textBoxBrush1, "Database or SUT file for 1.");
             // 
             // buttonFileBrowse1
             // 
@@ -345,7 +345,7 @@
             this.tableLayoutPanelDatabase2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tableLayoutPanelDatabase2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
             this.tableLayoutPanelDatabase2.Controls.Add(this.labelFile2, 0, 0);
-            this.tableLayoutPanelDatabase2.Controls.Add(this.textBoxDatabase2, 1, 0);
+            this.tableLayoutPanelDatabase2.Controls.Add(this.textBoxCrush2, 1, 0);
             this.tableLayoutPanelDatabase2.Controls.Add(this.buttonBrowseFile2, 2, 0);
             this.tableLayoutPanelDatabase2.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanelDatabase2.Location = new System.Drawing.Point(3, 2);
@@ -371,15 +371,15 @@
             this.labelFile2.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.toolTip.SetToolTip(this.labelFile2, "Database or SUT file for 2.");
             // 
-            // textBoxDatabase2
+            // textBoxCrush2
             // 
-            this.textBoxDatabase2.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.textBoxDatabase2.Location = new System.Drawing.Point(91, 2);
-            this.textBoxDatabase2.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.textBoxDatabase2.Name = "textBoxDatabase2";
-            this.textBoxDatabase2.Size = new System.Drawing.Size(1340, 38);
-            this.textBoxDatabase2.TabIndex = 1;
-            this.toolTip.SetToolTip(this.textBoxDatabase2, "Database or SUT file for 2.");
+            this.textBoxCrush2.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.textBoxCrush2.Location = new System.Drawing.Point(91, 2);
+            this.textBoxCrush2.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.textBoxCrush2.Name = "textBoxDatabase2";
+            this.textBoxCrush2.Size = new System.Drawing.Size(1340, 38);
+            this.textBoxCrush2.TabIndex = 1;
+            this.toolTip.SetToolTip(this.textBoxCrush2, "Database or SUT file for 2.");
             // 
             // buttonBrowseFile2
             // 
@@ -612,11 +612,11 @@
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanelGroupBrush2;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanelDatabase2;
         private System.Windows.Forms.Label labelFile2;
-        private System.Windows.Forms.TextBox textBoxDatabase2;
+        private System.Windows.Forms.TextBox textBoxCrush2;
         private System.Windows.Forms.Button buttonBrowseFile2;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanelDatabase1;
         private System.Windows.Forms.Label labelFile1;
-        private System.Windows.Forms.TextBox textBoxDatabase1;
+        private System.Windows.Forms.TextBox textBoxBrush1;
         private System.Windows.Forms.Button buttonFileBrowse1;
         private System.Windows.Forms.ToolTip toolTip;
         private System.Windows.Forms.FlowLayoutPanel flowLayoutPanelBrush1;

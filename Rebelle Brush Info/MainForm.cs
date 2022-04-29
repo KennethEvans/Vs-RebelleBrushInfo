@@ -1,5 +1,6 @@
 ﻿//#define debugging
 //#define replaceDoctype
+//#define TEST
 
 using System;
 using System.Collections.Generic;
@@ -13,15 +14,15 @@ using MetadataExtractor;
 namespace RebelleBrushInfo {
 
     public partial class MainForm : Form {
-        enum FileType { Database1, Database2, Brush1, Brush2 };
+        enum FileType { Brush1, Brush2 };
         public static readonly int PROCESS_TIMEOUT = 5000; // ms
         public static readonly String NL = Environment.NewLine;
         private static ScrolledHTMLDialog overviewDlg;
         private static ScrolledRichTextDialog textDlg;
         private static FindDialog findDlg;
 
-        private List<RebelleBrushParam> params1 = new List<RebelleBrushParam>();
-        private List<RebelleBrushParam> params2 = new List<RebelleBrushParam>();
+        private List<BrushParam> params1 = new List<BrushParam>();
+        private List<BrushParam> params2 = new List<BrushParam>();
         private string info1;
         private string info2;
         //private List<string> attributes1 = new List<string>();
@@ -33,8 +34,8 @@ namespace RebelleBrushInfo {
         public MainForm() {
             InitializeComponent();
 
-            textBoxDatabase1.Text = Properties.Settings.Default.DatabaseName1;
-            textBoxDatabase2.Text = Properties.Settings.Default.DatabaseName2;
+            textBoxBrush1.Text = Properties.Settings.Default.DatabaseName1;
+            textBoxCrush2.Text = Properties.Settings.Default.DatabaseName2;
         }
 
         /// <summary>
@@ -44,42 +45,40 @@ namespace RebelleBrushInfo {
         /// <param name="print">Whether to write to textBoxInfo.</param>
         private void processBrush(FileType fileType, bool print) {
             int nBrush = 1;
-            TextBox textBoxDatabase = null;
             TextBox textBoxBrush = null;
-            RadioButton radioButtonVariant = null;
-            List<RebelleBrushParam> paramsList = null;
-            RebelleBrushParam param = null;
+            List<BrushParam> paramsList = null;
+            BrushParam param = null;
             string info = null;
             switch (fileType) {
-                case FileType.Database1:
+                case FileType.Brush1:
                     nBrush = 1;
-                    textBoxDatabase = textBoxDatabase1;
+                    textBoxBrush = textBoxBrush1;
                     break;
-                case FileType.Database2:
+                case FileType.Brush2:
                     nBrush = 2;
-                    textBoxDatabase = textBoxDatabase2;
-                     break;
+                    textBoxBrush = textBoxCrush2;
+                    break;
                 default:
                     Utils.Utils.errMsg("Invalid fileType ("
                         + fileType + ") for processBrush");
                     return;
             }
             textBoxInfo.Clear();
-            paramsList = new List<RebelleBrushParam>();
+            paramsList = new List<BrushParam>();
             info = "";
-            String name = textBoxDatabase.Text;
-            if (name == null || name.Length == 0) {
+            String fileName = textBoxBrush.Text;
+            if (fileName == null || fileName.Length == 0) {
                 registerOutput(fileType, info, paramsList);
                 Utils.Utils.errMsg("Brush " + nBrush + " is not defined");
                 return;
             }
-            if (!File.Exists(name)) {
+            if (!File.Exists(fileName)) {
                 registerOutput(fileType, info, paramsList);
-                Utils.Utils.errMsg(name + " does not exist");
+                Utils.Utils.errMsg(fileName + " does not exist");
                 return;
             }
-            // Get the selected brush name
-            string brushName = Path.GetFileNameWithoutExtension(name);
+            // Get the selected brush fileName
+            string brushName = Path.GetFileNameWithoutExtension(fileName);
             if (brushName == null | brushName.Length == 0) {
                 registerOutput(fileType, info, paramsList);
                 Utils.Utils.errMsg("Brush not specified");
@@ -88,17 +87,49 @@ namespace RebelleBrushInfo {
             info += brushName + NL + NL;
 
             // Get the metadata
-            var directories = ImageMetadataReader.ReadMetadata(name);
-            foreach (var directory in directories) {
+            var directories = ImageMetadataReader.ReadMetadata(fileName);
+#if TEST
+            foreach (MetadataExtractor.Directory directory in directories) {
                 info += directory.Name + NL;
-                foreach (var tag in directory.Tags)
-                    //info += $"[{directory.Name}] {tag.Name} = {tag.Description}" + NL;
+                foreach (Tag tag in directory.Tags) {
                     info += $"    {tag.Name} = {tag.Description}" + NL;
+                }
                 if (directory.HasError) {
                     foreach (var error in directory.Errors)
                         info += $"ERROR: {error}";
                 }
             }
+#else
+            int index, len;
+            string name = "", value = "";
+            foreach (MetadataExtractor.Directory directory in directories) {
+                foreach (Tag tag in directory.Tags) {
+                    // Don't do the non-Rebelle ones
+                    if(!directory.Name.Equals("PNG-tEXt") &&
+                        !directory.Name.Equals("PNG-zTXt")) {
+                        continue;
+                    }
+                    //info += directory.Name + NL;
+                    len = tag.Description.Length;
+                    index = tag.Description.IndexOf(":");
+                    if (index > -1) {
+                        if (directory.Name.Equals("PNG-tEXt")) {
+                            name = tag.Description.Substring(0, index);
+                            value = tag.Description.Substring(index + 1);
+                        } else if (directory.Name.Equals("PNG-zTXt")) {
+                            name = tag.Description.Substring(0, index);
+                            value = tag.Description.Substring(index + 1);
+                        }
+                    }
+                    param = new BrushParam(1, directory.Name, name, value);
+                    info += $"{param.info()}" + NL;
+                }
+                if (directory.HasError) {
+                    foreach (var error in directory.Errors)
+                        info += $"ERROR: {error}";
+                }
+            }
+#endif
 
             //SQLiteConnection conn = null;
             //SQLiteDataReader dataReader;
@@ -155,10 +186,10 @@ namespace RebelleBrushInfo {
             //            }
             //            MultiChoiceListDialog dlg = new MultiChoiceListDialog(itemsList);
             //            switch (fileType) {
-            //                case FileType.Database1:
+            //                case FileType.Brush1:
             //                    dlg.Text = "Brush 1 Ambiguity";
             //                    break;
-            //                case FileType.Database2:
+            //                case FileType.Brush2:
             //                    dlg.Text = "Brush 2 Ambiguity";
             //                    break;
             //                default:
@@ -244,7 +275,7 @@ namespace RebelleBrushInfo {
             //                    nNull++;
             //                    continue;
             //                }
-            //                param = new RebelleBrushParam(dataReader.GetName(i),
+            //                param = new BrushParam(dataReader.GetName(i),
             //                    dataReader.GetDataTypeName(i), dataReader.GetValue(i));
             //                param.Value = dataReader.GetValue(i);
             //                //    appendInfo(param.info());
@@ -268,13 +299,13 @@ namespace RebelleBrushInfo {
         /// </summary>
         private void compare() {
             // Process 1
-            processBrush(FileType.Database1, false);
+            processBrush(FileType.Brush1, false);
             if (params1.Count == 0) {
                 Utils.Utils.errMsg("Did not get params for Brush 1");
                 return;
             }
             // Process 2
-            processBrush(FileType.Database2, false);
+            processBrush(FileType.Brush2, false);
             if (params2.Count == 0) {
                 Utils.Utils.errMsg("Did not get params for Brush 2");
                 return;
@@ -282,16 +313,16 @@ namespace RebelleBrushInfo {
 
             // Write heading to textBoxInfo
             textBoxInfo.Text = "1: ";
-            printHeading(FileType.Database1);
+            printHeading(FileType.Brush1);
             appendInfo("2: ");
-            printHeading(FileType.Database2);
+            printHeading(FileType.Brush2);
             // Look for items in 2 that are in 1
             bool found;
-            RebelleBrushParam foundParam = null;
-            foreach (RebelleBrushParam param1 in params1) {
+            BrushParam foundParam = null;
+            foreach (BrushParam param1 in params1) {
                 found = false;
                 // Look for the same name
-                foreach (RebelleBrushParam param2 in params2) {
+                foreach (BrushParam param2 in params2) {
                     if (param1.Name.Equals(param2.Name)) {
                         found = true;
                         foundParam = param2;
@@ -300,25 +331,25 @@ namespace RebelleBrushInfo {
                 }
                 if (!found) {
                     appendInfo(param1.Name + NL);
-                    appendInfo("  1: " + param1.getValueAsString("  "));
-                    appendImages(param1);
+                    appendInfo("  1: " + param1.Text);
+                    //appendImages(param1);
                     appendInfo("  2: Not found in 2" + NL);
                     continue;
                 }
                 if (found && !param1.equals(foundParam)) {
                     appendInfo(param1.Name + NL);
-                    appendInfo("  1: " + param1.getValueAsString("  "));
-                    appendImages(param1);
-                    appendInfo("  2: " + foundParam.getValueAsString("  "));
-                    appendImages(foundParam);
+                    appendInfo("  1: " + param1.Text);
+                    //appendImages(param1);
+                    appendInfo("  2: " + foundParam.Text);
+                    //appendImages(foundParam);
                 }
             }
 
             // Look for items in 2 that are not in 1
-            foreach (RebelleBrushParam param2 in params2) {
+            foreach (BrushParam param2 in params2) {
                 found = false;
                 // Look for the same name
-                foreach (RebelleBrushParam param1 in params1) {
+                foreach (BrushParam param1 in params1) {
                     if (param1.Name.Equals(param2.Name)) {
                         found = true;
                         break;
@@ -327,8 +358,8 @@ namespace RebelleBrushInfo {
                 if (!found) {
                     appendInfo(param2.Name + NL);
                     appendInfo("  1: Not found in 1" + NL);
-                    appendInfo("  2: " + param2.getValueAsString("  "));
-                    appendImages(param2);
+                    appendInfo("  2: " + param2.Text);
+                    //appendImages(param2);
                     continue;
                 }
             }
@@ -350,13 +381,13 @@ namespace RebelleBrushInfo {
             string fileName = "";
             // Set initial directory
             switch (type) {
-                case FileType.Database1:
+                case FileType.Brush1:
                     //dlg.Filter = "Krita Presets|*.kpp";
-                    fileName = textBoxDatabase1.Text;
+                    fileName = textBoxBrush1.Text;
                     break;
-                case FileType.Database2:
+                case FileType.Brush2:
                     //dlg.Filter = "Krita Presets|*.kpp";
-                    fileName = textBoxDatabase2.Text;
+                    fileName = textBoxCrush2.Text;
                     break;
             }
             if (File.Exists(fileName)) {
@@ -370,12 +401,12 @@ namespace RebelleBrushInfo {
 
         private void resetFileName(FileType type, string name) {
             switch (type) {
-                case FileType.Database1:
-                    textBoxDatabase1.Text = name;
+                case FileType.Brush1:
+                    textBoxBrush1.Text = name;
                     Properties.Settings.Default.DatabaseName1 = name;
                     break;
-                case FileType.Database2:
-                    textBoxDatabase2.Text = name;
+                case FileType.Brush2:
+                    textBoxCrush2.Text = name;
                     Properties.Settings.Default.DatabaseName2 = name;
                     break;
             }
@@ -389,13 +420,13 @@ namespace RebelleBrushInfo {
         /// <param name="info"></param>
         /// <param name="paramsList"></param>
         private void registerOutput(FileType fileType, string info,
-            List<RebelleBrushParam> paramsList) {
+            List<BrushParam> paramsList) {
             switch (fileType) {
-                case FileType.Database1:
+                case FileType.Brush1:
                     info1 = info;
                     params1 = paramsList; ;
                     break;
-                case FileType.Database2:
+                case FileType.Brush2:
                     info2 = info;
                     params2 = paramsList; ;
                     break;
@@ -409,10 +440,10 @@ namespace RebelleBrushInfo {
         /// <returns></returns>
         private void printHeading(FileType type) {
             switch (type) {
-                case FileType.Database1:
+                case FileType.Brush1:
                     appendInfo(info1 + NL);
                     break;
-                case FileType.Database2:
+                case FileType.Brush2:
                     appendInfo(info2 + NL);
                     break;
             }
@@ -441,8 +472,8 @@ namespace RebelleBrushInfo {
         }
 
         private void OnFormClosing(object sender, FormClosingEventArgs e) {
-            Properties.Settings.Default.DatabaseName1 = textBoxDatabase1.Text;
-            Properties.Settings.Default.DatabaseName2 = textBoxDatabase2.Text;
+            Properties.Settings.Default.DatabaseName1 = textBoxBrush1.Text;
+            Properties.Settings.Default.DatabaseName2 = textBoxCrush2.Text;
             Properties.Settings.Default.Save();
         }
 
@@ -450,15 +481,15 @@ namespace RebelleBrushInfo {
             textBoxInfo.AppendText(info);
         }
 
-        private void appendImages(RebelleBrushParam param) {
-            if (param.Name.ToLower().Contains("effector")) {
-                List<Bitmap> images = param.getEffectorImages("  ");
-                if (images != null && images.Count > 0) {
-                    // Insert RTF string
-                    processImagesUsingRtf(images);
-                }
-            }
-        }
+        //private void appendImages(BrushParam param) {
+        //    if (param.Name.ToLower().Contains("effector")) {
+        //        List<Bitmap> images = param.getEffectorImages("  ");
+        //        if (images != null && images.Count > 0) {
+        //            // Insert RTF string
+        //            processImagesUsingRtf(images);
+        //        }
+        //    }
+        //}
 
         /// <summary>
         /// Inserts the given text at the start of textBoxInfo.
@@ -472,12 +503,12 @@ namespace RebelleBrushInfo {
         }
 
         private void OnProcess1Click(object sender, EventArgs e) {
-            processBrush(FileType.Database1, true);
+            processBrush(FileType.Brush1, true);
             textBoxInfo.Clear();
-            printHeading(FileType.Database1);
-            foreach (RebelleBrushParam param in params1) {
-                appendInfo(param.info("  "));
-                appendImages(param);
+            printHeading(FileType.Brush1);
+            foreach (BrushParam param in params1) {
+                appendInfo(param.info());
+                //appendImages(param);
             }
             // Check for errors
             if (checkForErrors()) {
@@ -487,12 +518,12 @@ namespace RebelleBrushInfo {
         }
 
         private void OnProcess2Click(object sender, EventArgs e) {
-            processBrush(FileType.Database2, true);
+            processBrush(FileType.Brush2, true);
             textBoxInfo.Clear();
-            printHeading(FileType.Database2);
-            foreach (RebelleBrushParam param in params2) {
-                appendInfo(param.info("  "));
-                appendImages(param);
+            printHeading(FileType.Brush2);
+            foreach (BrushParam param in params2) {
+                appendInfo(param.info());
+                //appendImages(param);
             }
             // Check for errors
             if (checkForErrors()) {
@@ -530,15 +561,15 @@ namespace RebelleBrushInfo {
         }
 
         private void OnBrowseDatabase1Click(object sender, EventArgs e) {
-            getFileName(FileType.Database1);
+            getFileName(FileType.Brush1);
         }
 
         private void OnBrowseDatabase2Click(object sender, EventArgs e) {
-            getFileName(FileType.Database2);
+            getFileName(FileType.Brush2);
         }
 
         private void OnBrowseBrush1Click(object sender, EventArgs e) {
-            string databaseName = textBoxDatabase1.Text;
+            string databaseName = textBoxBrush1.Text;
             if (databaseName == null || databaseName.Length == 0) {
                 Utils.Utils.errMsg("Brush 1 is not defined");
                 return;
@@ -550,7 +581,7 @@ namespace RebelleBrushInfo {
         }
 
         private void OnBrowseBrush2Click(object sender, EventArgs e) {
-            string databaseName = textBoxDatabase2.Text;
+            string databaseName = textBoxCrush2.Text;
             if (databaseName == null || databaseName.Length == 0) {
                 Utils.Utils.errMsg("Brush 2 is not defined");
                 return;
@@ -596,9 +627,9 @@ namespace RebelleBrushInfo {
             //string label = sender.ToString();
             //string database;
             //if (label.StartsWith("Database 2")) {
-            //    database = textBoxDatabase2.Text;
+            //    database = textBoxCrush2.Text;
             //} else {
-            //    database = textBoxDatabase1.Text;
+            //    database = textBoxBrush1.Text;
             //}
             //string info = DatabaseUtils.getToolHierarchy(database);
             //// Create, show, or set visible the overview dialog as appropriate

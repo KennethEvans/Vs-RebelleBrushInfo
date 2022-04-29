@@ -86,8 +86,7 @@ namespace RebelleBrushInfo {
         /// <param name="tab">Prefix for each line, typically "  " or similar.</param>
         /// <returns></returns>
         string interpretEffector(byte[] bytes, string tab) {
-            string info = "";
-            info = tab + "Interpreted:" + NL;
+            string info = tab + "Interpreted:" + NL;
             int nBytes = bytes.Length;
             int nBytesRead = 0;
             int nControlPoints;
@@ -251,15 +250,14 @@ namespace RebelleBrushInfo {
         /// </summary>
         /// <param name="tab">Prefix for each line, typically "  " or similar.</param>
         /// <returns></returns>
-        public List<Bitmap> getEffectorImages(string tab) {
+        public List<Bitmap> getEffectorImages() {
             if (!typeName.Contains("BLOB") ||
                 !name.ToLower().Contains("effector")) {
                 return null;
             }
             List<Bitmap> imageArray = new List<Bitmap>();
             Bitmap image;
-            byte[] bytes = null;
-            bytes = (byte[])value;
+            byte[] bytes = (byte[])value;
 
             int nBytes = bytes.Length;
             int nBytesRead = 0;
@@ -355,8 +353,7 @@ namespace RebelleBrushInfo {
         /// <param name="tab">Prefix for each line, typically "  " or similar.</param>
         /// <returns></returns>
         string interpretImage(byte[] bytes, string tab) {
-            string info = "";
-            info = tab + "Interpreted:" + NL;
+            string info = tab + "Interpreted:" + NL;
             int nBytes = bytes.Length;
             int nBytesRead = 0;
             int iVal, nItems;
@@ -673,7 +670,7 @@ namespace RebelleBrushInfo {
             string rtf = "";
             string newInfo = info;
             if (match.Success) {
-                int nGroups = match.Groups.Count;
+                //int nGroups = match.Groups.Count;
                 string value;
                 foreach (Group group in match.Groups) {
                     value = group.Value;
