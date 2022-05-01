@@ -65,6 +65,7 @@
             this.buttonProcess1 = new System.Windows.Forms.Button();
             this.buttonProcess2 = new System.Windows.Forms.Button();
             this.buttonCompare = new System.Windows.Forms.Button();
+            this.button1 = new System.Windows.Forms.Button();
             this.buttonQuit = new System.Windows.Forms.Button();
             this.toolTip = new System.Windows.Forms.ToolTip(this.components);
             this.tableLayoutPanelTop.SuspendLayout();
@@ -257,7 +258,7 @@
             this.textBoxBrush1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.textBoxBrush1.Location = new System.Drawing.Point(91, 2);
             this.textBoxBrush1.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.textBoxBrush1.Name = "textBoxDatabase1";
+            this.textBoxBrush1.Name = "textBoxBrush1";
             this.textBoxBrush1.Size = new System.Drawing.Size(1340, 38);
             this.textBoxBrush1.TabIndex = 1;
             this.toolTip.SetToolTip(this.textBoxBrush1, "Database or SUT file for 1.");
@@ -376,7 +377,7 @@
             this.textBoxCrush2.Dock = System.Windows.Forms.DockStyle.Fill;
             this.textBoxCrush2.Location = new System.Drawing.Point(91, 2);
             this.textBoxCrush2.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.textBoxCrush2.Name = "textBoxDatabase2";
+            this.textBoxCrush2.Name = "textBoxCrush2";
             this.textBoxCrush2.Size = new System.Drawing.Size(1340, 38);
             this.textBoxCrush2.TabIndex = 1;
             this.toolTip.SetToolTip(this.textBoxCrush2, "Database or SUT file for 2.");
@@ -494,11 +495,12 @@
             this.flowLayoutPanelButtons.Controls.Add(this.buttonProcess1);
             this.flowLayoutPanelButtons.Controls.Add(this.buttonProcess2);
             this.flowLayoutPanelButtons.Controls.Add(this.buttonCompare);
+            this.flowLayoutPanelButtons.Controls.Add(this.button1);
             this.flowLayoutPanelButtons.Controls.Add(this.buttonQuit);
-            this.flowLayoutPanelButtons.Location = new System.Drawing.Point(441, 1214);
+            this.flowLayoutPanelButtons.Location = new System.Drawing.Point(347, 1214);
             this.flowLayoutPanelButtons.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.flowLayoutPanelButtons.Name = "flowLayoutPanelButtons";
-            this.flowLayoutPanelButtons.Size = new System.Drawing.Size(705, 46);
+            this.flowLayoutPanelButtons.Size = new System.Drawing.Size(893, 46);
             this.flowLayoutPanelButtons.TabIndex = 0;
             this.flowLayoutPanelButtons.WrapContents = false;
             // 
@@ -540,19 +542,33 @@
             this.buttonCompare.Location = new System.Drawing.Point(477, 2);
             this.buttonCompare.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.buttonCompare.Name = "buttonCompare";
-            this.buttonCompare.Size = new System.Drawing.Size(141, 42);
+            this.buttonCompare.Size = new System.Drawing.Size(164, 42);
             this.buttonCompare.TabIndex = 2;
-            this.buttonCompare.Text = "Compare";
-            this.toolTip.SetToolTip(this.buttonCompare, "Compare the brushes, listing differences.");
+            this.buttonCompare.Text = "Compare ≠";
+            this.toolTip.SetToolTip(this.buttonCompare, "Compare the brushes, showing\r\n only differences.");
             this.buttonCompare.UseVisualStyleBackColor = true;
             this.buttonCompare.Click += new System.EventHandler(this.OnCompareClick);
+            // 
+            // button1
+            // 
+            this.button1.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.button1.AutoSize = true;
+            this.button1.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.button1.Location = new System.Drawing.Point(647, 2);
+            this.button1.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(159, 42);
+            this.button1.TabIndex = 4;
+            this.button1.Text = "Compare *";
+            this.toolTip.SetToolTip(this.button1, "Compare the brushes, showing all values.");
+            this.button1.UseVisualStyleBackColor = true;
             // 
             // buttonQuit
             // 
             this.buttonQuit.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.buttonQuit.AutoSize = true;
             this.buttonQuit.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.buttonQuit.Location = new System.Drawing.Point(624, 2);
+            this.buttonQuit.Location = new System.Drawing.Point(812, 2);
             this.buttonQuit.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.buttonQuit.Name = "buttonQuit";
             this.buttonQuit.Size = new System.Drawing.Size(78, 42);
@@ -641,6 +657,7 @@
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator3;
         private System.Windows.Forms.ToolStripMenuItem saveAsRTFToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem findToolStripMenuItem;
+        private System.Windows.Forms.Button button1;
     }
 }
 

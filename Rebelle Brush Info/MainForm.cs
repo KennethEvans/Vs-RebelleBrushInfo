@@ -2,15 +2,15 @@
 //#define replaceDoctype
 //#define TEST
 
+using About;
+using MetadataExtractor;
+using RebelleUtils;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
-using System.Windows.Forms;
-using About;
-using RebelleUtils;
-using MetadataExtractor;
 using System.Text;
+using System.Windows.Forms;
 
 namespace RebelleBrushInfo {
 
@@ -19,7 +19,7 @@ namespace RebelleBrushInfo {
         public static readonly int PROCESS_TIMEOUT = 5000; // ms
         public static readonly String NL = Environment.NewLine;
         private static ScrolledHTMLDialog overviewDlg;
-        private static ScrolledRichTextDialog textDlg;
+        //private static ScrolledRichTextDialog textDlg;
         private static FindDialog findDlg;
 
         private List<BrushParam> paramsList1 = new List<BrushParam>();
@@ -152,7 +152,8 @@ namespace RebelleBrushInfo {
         /// <summary>
         /// Compares the two files and displays the output.
         /// </summary>
-        private void compare() {
+        /// <param name="all">Whether to show all items or just differences.</param>
+        private void compare(Boolean all = false) {
             // Process brush 1
             processBrush(FileType.Brush1, false);
             if (paramsList1.Count == 0) {
@@ -172,80 +173,71 @@ namespace RebelleBrushInfo {
             appendInfo("2: ");
             printHeading(FileType.Brush2);
 
-            // Look for items in 2 that are in 1
-            BrushParam foundParam = null;
-            foreach (BrushParam param1 in paramsList1) {
-                foundParam = checkIfContained(param1, paramsList2);
-                if (foundParam == null) {
-                    appendInfo(param1.Name + NL);
-                    appendInfo(param1.info("  1: ", false));
-                    appendInfo(indented("  2: Not found in 1", param1.Level));
-                    continue;
-                }
-                // !!!
-                if (foundParam != null && !param1.equals(foundParam)) {
-                    // Most interesting 1 and 2 are found and differ
-                    appendInfo(param1.Name + NL);
-                    if (param1.Children == null && foundParam.Children == null) {
-                        // 1 and 2 both do not have children
-                        appendInfo("  1: " + param1.info(doChildren: false));
-                        appendInfo("  2: " + foundParam.info(doChildren: false));
-                    } else if (param1.Children != null && foundParam.Children == null) {
-                        // 1 has children, 2 does not
-                        appendInfo(param1.info("  1: ", doChildren: true));
-                        appendInfo(indented("  2: Not found in 1", param1.Level));
-                    } else if (param1.Children == null && foundParam.Children != null) {
-                        // 1 does not have children, 2 does
-                        appendInfo(indented("  1: Not found in 2", foundParam.Level));
-                        appendInfo(foundParam.info("  2: ", doChildren: true));
-                    } else {
-                        // Both have children
-                        // Only process first level of children
-                        // Look for the same name
-                        BrushParam foundParam1 = null;
-                        foreach (BrushParam param11 in param1.Children) {
-                            foundParam1 = checkIfContained(param11, foundParam.Children);
-                            if (foundParam1 == null) {
-                                // 2 not in 1 (children)
-                                appendInfo(param11.Name + NL);
-                                appendInfo(param11.info("  1: ", true));
-                                appendInfo(indented("  2: Not found in 1", param11.Level));
-                                continue;
-                            }
-                            if (foundParam1 != null && !param11.equals(foundParam1)) {
-                                // 1 and 2 both there and differ (children)
-                                appendInfo(param11.Name + NL);
-                                appendInfo(param11.info("1: ", true));
-                                appendInfo(foundParam1.info("2: ", true));
-                            }
-                        }
-                        //// Look for items in 2 that are not in 1
-                        //if (foundParam1 != null) {
-                        //    foreach (BrushParam param22 in foundParam.Children) {
-                        //        foundParam1 = checkIfContained(param22, param1.Children);
-                        //        if (foundParam1 == null) {
-                        //            // 1 not in 2 (children)
-                        //            appendInfo(foundParam.Name + NL);
-                        //            appendInfo(indented("  1: Not found in 2", param22.Level));
-                        //            appendInfo(param22.info("  2: ", false));
-                        //            continue;
-                        //        }
-                        //    }
-                        //}
-                    }
-                }
+            // Make a SortedDictionary holding all the items form both brushes.
+            SortedDictionary<string, CompareItem> items =
+                new SortedDictionary<string, CompareItem>();
+            foreach (BrushParam param in paramsList1) {
+                BrushParam.addToDictionary(1, param, items);
+            }
+            foreach (BrushParam param in paramsList2) {
+                BrushParam.addToDictionary(2, param, items);
             }
 
-            // Look for items in 2 that are not in 1
-            foreach (BrushParam param2 in paramsList2) {
-                foundParam = checkIfContained(param2, paramsList1);
-                if (foundParam == null) {
-                    appendInfo(param2.Name + NL);
-                    appendInfo(indented("  1: Not found in 2", param2.Level));
-                    appendInfo(param2.info("  2: ", false));
-                    continue;
+            string info = getItemInfo(items, all);
+            appendInfo(info);
+        }
+
+        /// <summary>
+        /// Get the info for the given dictionary and its children recursively.
+        /// </summary>
+        /// <param name="items">The dictionary.</param>
+        /// <returns>The information.</returns>
+        private string getItemInfo(SortedDictionary<string, CompareItem> items,
+            bool all) {
+            string info = "";
+            string info1, info2, note1 = "  1 ", note2 = "  2 ";
+            int pos1, pos2;
+            int level;
+            CompareItem item;
+            SortedDictionary<string, CompareItem>.KeyCollection keys = items.Keys;
+            foreach (string key in keys) {
+                bool res = items.TryGetValue(key, out item);
+                if (res) {
+                    level = (item.Param1 != null) ? item.Param1.Level : item.Param2.Level;
+                    info1 = item.getInfo(1, prefix: note1, doChildren: false);
+                    info2 = item.getInfo(2, prefix: note2, doChildren: false);
+                    if (all) {
+                        info += BrushParam.indented(key, level);
+                        info += info1;
+                        info += info2;
+                    } else {
+                        int index1 = info1.IndexOf(note1);
+                        if (index1 != -1) {
+                            pos1 = index1 + note1.Length;
+                        } else {
+                            pos1 = 0;
+                        }
+                        int index2 = info2.IndexOf(note2);
+                        if (index2 != -1) {
+                            pos2 = index2 + note2.Length;
+                        } else {
+                            pos2 = 0;
+                        }
+                        if (!info1.Substring(pos1).Equals(info2.Substring(pos2))) {
+                            info += BrushParam.indented(key, level);
+                            info += info1;
+                            info += info2;
+                        }
+                    }
+                    if (item.Children.Count > 0) {
+                        info += getItemInfo(item.Children, all);
+                    }
+                } else {
+                    info += BrushParam.indented("  1 Error: ", item.Param1.Level);
+                    info += BrushParam.indented("  2 Error: ", item.Param2.Level);
                 }
             }
+            return info;
         }
 
         BrushParam checkIfContained(BrushParam param, List<BrushParam> list) {
@@ -255,24 +247,6 @@ namespace RebelleBrushInfo {
                 }
             }
             return null;
-        }
-
-        /// <summary>
-        /// Returns a string that is indented like BrushParam.info is. A NL is
-        /// added;
-        /// </summary>
-        /// <param name="text"></param>
-        /// <param name="level">The level to use for indentation. Get from a
-        /// BrushParam</param>
-        /// <param name="tab">The tab string to use, usually "    "</param>
-        /// <returns>The indented string.</returns>
-        private string indented(string text, int level, string tab = "    ") {
-            string info = "";
-            for (int i = 1; i < level; i++) {
-                info += tab;
-            }
-            info += text + NL;
-            return info;
         }
 
         /// <summary>
@@ -460,6 +434,14 @@ namespace RebelleBrushInfo {
 
         private void OnCompareClick(object sender, EventArgs e) {
             compare();
+            // Check for errors
+            if (checkForErrors()) {
+                InsertAtInfoTop("!!! There are errors" + NL + NL);
+            }
+        }
+
+        private void OnCompareAllClick(object sender, EventArgs e) {
+            compare(true);
             // Check for errors
             if (checkForErrors()) {
                 InsertAtInfoTop("!!! There are errors" + NL + NL);

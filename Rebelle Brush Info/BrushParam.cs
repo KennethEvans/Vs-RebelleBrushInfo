@@ -1,14 +1,12 @@
-﻿using System;
-using System.Collections;
+﻿using Newtonsoft.Json.Linq;
+using System;
 using System.Collections.Generic;
 using System.Text;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 
 namespace RebelleBrushInfo {
-    enum ParamType { UNKNOWN, TEXT, JOBJECT, JARRAY, IMAGE }
+    public enum ParamType { UNKNOWN, TEXT, JOBJECT, JARRAY, IMAGE }
 
-    class BrushParam : IComparable<BrushParam> {
+    public class BrushParam : IComparable<BrushParam> {
         public static readonly String NL = Environment.NewLine;
         public int Level { get; }
         public string Name { get; }
@@ -160,6 +158,91 @@ namespace RebelleBrushInfo {
         }
 
         /// <summary>
+        /// Returns a string that is indented like BrushParam.info is. A NL is
+        /// added;
+        /// </summary>
+        /// <param name="text"></param>
+        /// <param name="level">The level to use for indentation. Get from a
+        /// BrushParam</param>
+        /// <param name="tab">The tab string to use, usually "    "</param>
+        /// <returns>The indented string.</returns>
+        public static string indented(string text, int level, string tab = "    ") {
+            string info = "";
+            for (int i = 1; i < level; i++) {
+                info += tab;
+            }
+            info += text + NL;
+            return info;
+        }
+
+        /// <summary>
+        /// Recursively adds this BrushParam and its children to the given dictionary.
+        /// </summary>
+        /// <param name="which">1 or 2, depending on the position in the BrushItem</param>
+        /// <param name="param">The BrushParam to add.</param>
+        /// <param name="items">The discionary to add it to.</param>
+        public static void addToDictionary(int which, BrushParam param,
+            SortedDictionary<string, CompareItem> items) {
+            CompareItem item = null;
+            bool exists;
+            if (param.Name.Equals("brush_rotation_mode")) {
+                string temp = param.Name;
+            }
+            if (param.Name.Equals("Parameters")) {
+                string temp = param.Name;
+            }
+            if (items.ContainsKey(param.Name)) {
+                // DEBUG
+                // Key exists in dictionary
+                if (which == 1) {
+                    exists = items.TryGetValue(param.Name, out item);
+                    if (exists) {
+                        item.Param1 = param;
+                    } else {
+                        item = new CompareItem(param, null);
+                        items.Add(param.Name, item);
+                    }
+                    // Add children
+                    if (param.Children != null) {
+                        SortedDictionary<string, CompareItem> childDictionary =
+                            item.Children;
+                        foreach (BrushParam child in param.Children) {
+                            if (param.Name.Equals("brush_rotation_mode")) {
+                                string temp = param.Name;
+                            }
+                            addToDictionary(1, child, childDictionary);
+                        }
+                    }
+                } else if (which == 2) {
+                    exists = items.TryGetValue(param.Name, out item);
+                    if (exists) {
+                        item.Param2 = param;
+                    } else {
+                        item = new CompareItem(null, param);
+                        items.Add(param.Name, item);
+                    }
+                }
+            } else {
+                // Key does not exist in dictionary
+                if (which == 1) {
+                    item = new CompareItem(param);
+                    items.Add(param.Name, item);
+                } else if (which == 2) {
+                    item = new CompareItem(null, param);
+                    items.Add(param.Name, item);
+                }
+            }
+            // Add children
+            if (param.Children != null) {
+                SortedDictionary<string, CompareItem> childDictionary =
+                    item.Children;
+                foreach (BrushParam child in param.Children) {
+                    addToDictionary(which, child, childDictionary);
+                }
+            }
+        }
+
+        /// <summary>
         /// Returns an information string for this RebelleBrushParam. This consists
         /// of the Name and the result of getValueByString().
         /// </summary>
@@ -199,7 +282,7 @@ namespace RebelleBrushInfo {
                     value = Text;
                     break;
             }
-            info.Append(TAB).Append(value).Append(NL);
+            info.Append(value).Append(NL);
             if (!doChildren) return info.ToString();
             if (Children != null) {
                 //int nChildren = 0;

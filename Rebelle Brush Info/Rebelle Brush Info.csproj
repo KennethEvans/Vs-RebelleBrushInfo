@@ -6,7 +6,7 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{385A2F45-4D56-4F29-8E7A-84BD6729C900}</ProjectGuid>
     <OutputType>WinExe</OutputType>
-    <RootNamespace>Rebelle_Brush_Info</RootNamespace>
+    <RootNamespace>RebelleBrushInfo</RootNamespace>
     <AssemblyName>Rebelle Brush Info</AssemblyName>
     <TargetFrameworkVersion>v4.7</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
@@ -67,6 +67,7 @@
     <Compile Include="AboutBox.designer.cs">
       <DependentUpon>AboutBox.cs</DependentUpon>
     </Compile>
+    <Compile Include="CompareItem.cs" />
     <Compile Include="BrushParam.cs" />
     <Compile Include="Metadata.cs" />
     <Compile Include="FindDialog.cs">
@@ -132,6 +133,7 @@
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
     </Compile>
     <EmbeddedResource Include="ScrolledHTMLDialog.resx">
       <DependentUpon>ScrolledHTMLDialog.cs</DependentUpon>
