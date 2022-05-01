@@ -8,7 +8,7 @@ using Newtonsoft.Json.Linq;
 namespace RebelleBrushInfo {
     enum ParamType { UNKNOWN, TEXT, JOBJECT, JARRAY, IMAGE }
 
-    class BrushParam : IComparer {
+    class BrushParam : IComparable<BrushParam> {
         public static readonly String NL = Environment.NewLine;
         public int Level { get; }
         public string Name { get; }
@@ -18,23 +18,6 @@ namespace RebelleBrushInfo {
         public List<BrushParam> Children { get; }
 
         public BrushParam(int level, string chunk, string name, string text) {
-#if false
-            text = @"{""paint_mix_curve_2"": {
-        ""fromParams"": false,
-        ""function"": 2,
-        ""maximum"": 1,
-        ""minimum"": 0,
-        ""multiplier"": 1,
-        ""outputMax"": 1,
-        ""outputMin"": 0,
-        ""points"": [
-            {
-                    ""x"": 0.5,
-                ""y"": 1
-            }
-        ]
-    }}";
-#endif
             Level = level;
             Chunk = chunk;
             Name = name;
@@ -68,16 +51,14 @@ namespace RebelleBrushInfo {
                 if (jArray == null) {
                     // TO DO
                 } else {
+                    int nArray = 0;
                     foreach (JToken token in jArray.Children()) {
                         switch (token.Type) {
                             case JTokenType.Object:
                                 JObject jObject = token as JObject;
                                 BrushParam param1 = new BrushParam(level + 1,
-                                    "CHILD", "<Unnamed>", jObject.ToString());
+                                    "CHILD", $"[{++nArray}]", jObject.ToString());
                                 Children.Add(param1);
-                                break;
-                            case JTokenType.Array:
-                                JArray jArray1 = token as JArray;
                                 break;
                             case JTokenType.Property:
                                 JProperty jProperty = token as JProperty;
@@ -94,6 +75,10 @@ namespace RebelleBrushInfo {
                     }
                 }
             }
+            // Sort the Children
+            if (Children != null) {
+                Children.Sort();
+            }
         }
 
         private ParamType getType() {
@@ -103,6 +88,10 @@ namespace RebelleBrushInfo {
             if (Chunk.Equals("PNG-zTXt")) {
                 if (Text.StartsWith("{")) {
                     return ParamType.JOBJECT;
+                } else if (Text.Length <= 128) {
+                    // Assume a Base64 image is > this many characters
+                    // Short text is the asset_id
+                    return ParamType.TEXT;
                 } else {
                     return ParamType.IMAGE;
                 }
@@ -123,27 +112,49 @@ namespace RebelleBrushInfo {
             return ((BrushParam)x).Name.CompareTo(y.Name);
         }
 
-        public int Compare(object x, object y) {
-            throw new NotImplementedException();
+        public int CompareTo(BrushParam other) {
+            return (this.Name.CompareTo(((BrushParam)other).Name));
         }
 
         /// <summary>
-        /// Returns if the given BrushParam is equal to this one.
+        /// Returns if the given BrushParam is equal to this one including
+        /// children.
         /// </summary>
-        /// <param Name="param"></param>
+        /// <param name="param">The BrushParm to compare with.</param>
         /// <returns></returns>
         public bool equals(BrushParam param) {
             if (!this.Name.Equals(param.Name)) {
                 return false;
             }
-            if (!this.Name.Equals(param.Name)) {
+            if (!this.Text.Equals(param.Text)) {
                 return false;
             }
-            if (!this.Name.Equals(param.Name)) {
+            if (this.Type != param.Type) {
                 return false;
             }
-            if (!this.Name.Equals(param.Name)) {
+            if (this.Level != param.Level) {
                 return false;
+            }
+            // Check children
+            if (this.Children == null && param.Children == null) {
+                // No children, done
+                return true;
+            }
+            if (this.Children == null && param.Children != null) {
+                return false;
+            }
+            if (this.Children != null && param.Children == null) {
+                return false;
+            }
+            // Both have children
+            if (this.Children.Count != param.Children.Count) {
+                return false;
+            }
+            // Both have the same number of children
+            for (int i = 0; i < this.Children.Count; i++) {
+                if (!this.Children[i].equals(param.Children[i])) {
+                    return false;
+                }
             }
             return true;
         }
@@ -152,51 +163,15 @@ namespace RebelleBrushInfo {
         /// Returns an information string for this RebelleBrushParam. This consists
         /// of the Name and the result of getValueByString().
         /// </summary>
-        /// <param name="tab">Prefix for each line, typically "  " or similar.</param>
         /// <returns></returns>
-        public String info1(string tab) {
-            StringBuilder info;
-            info = new StringBuilder();
-            info.Append(Type).Append(" ");
-            info.Append(Name).Append(": ");
-            string value = "";
-            switch (Type) {
-                case ParamType.UNKNOWN:
-                    value = "Unknown";
-                    break;
-                case ParamType.JOBJECT:
-                    JObject jObject = JObject.Parse(Text);
-                    if (jObject == null) {
-                        value = Text + " (Error parsing)";
-                    } else {
-                        value = jObject.Count + " children" + NL;
-                        int nChildren = 0;
-                        foreach (JToken token in jObject.Children()) {
-                            value += "    " + nChildren++ + " " + token.Type
-                                + " " + token + NL;
-                        }
-                    }
-                    break;
-                case ParamType.IMAGE:
-                    value = "<Image>";
-                    break;
-                case ParamType.TEXT:
-                    value = Text;
-                    break;
-            }
-            info.Append(value).Append(NL);
-            return info.ToString();
-        }
-
-        /// <summary>
-        /// Returns an information string for this RebelleBrushParam. This consists
-        /// of the Name and the result of getValueByString().
-        /// </summary>
-        /// <returns></returns>
-        public String info() {
+        public String info(string prefix = "", bool doChildren = true,
+            string tab = "   ") {
             string TAB = "";
             for (int i = 1; i < Level; i++) {
-                TAB += "    ";
+                TAB += tab;
+            }
+            if (Level < 3) {
+                TAB += prefix;
             }
             StringBuilder info;
             info = new StringBuilder();
@@ -225,22 +200,15 @@ namespace RebelleBrushInfo {
                     break;
             }
             info.Append(TAB).Append(value).Append(NL);
+            if (!doChildren) return info.ToString();
             if (Children != null) {
                 //int nChildren = 0;
                 foreach (BrushParam brushParam in Children) {
                     //info.Append(TAB).Append("Child ").Append(nChildren++).Append(NL);
-                    info.Append(TAB).Append(brushParam.info());
-                    //if (brushParam.Children != null) {
-                    //    int nChildren1 = 0;
-                    //    foreach (BrushParam brushParam1 in brushParam.Children) {
-                    //        info.Append(TAB).Append("SubChild ").Append(nChildren1++).Append(NL);
-                    //        info.Append(TAB).Append(brushParam1.info());
-                    //    }
-                    //}
+                    info.Append(TAB).Append(brushParam.info(prefix, doChildren));
                 }
             }
             return info.ToString();
         }
-
     }
 }

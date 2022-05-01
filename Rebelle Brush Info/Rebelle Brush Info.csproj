@@ -68,6 +68,7 @@
       <DependentUpon>AboutBox.cs</DependentUpon>
     </Compile>
     <Compile Include="BrushParam.cs" />
+    <Compile Include="Metadata.cs" />
     <Compile Include="FindDialog.cs">
       <SubType>Form</SubType>
     </Compile>

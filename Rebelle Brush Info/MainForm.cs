@@ -10,6 +10,7 @@ using System.Windows.Forms;
 using About;
 using RebelleUtils;
 using MetadataExtractor;
+using System.Text;
 
 namespace RebelleBrushInfo {
 
@@ -21,15 +22,12 @@ namespace RebelleBrushInfo {
         private static ScrolledRichTextDialog textDlg;
         private static FindDialog findDlg;
 
-        private List<BrushParam> params1 = new List<BrushParam>();
-        private List<BrushParam> params2 = new List<BrushParam>();
+        private List<BrushParam> paramsList1 = new List<BrushParam>();
+        private List<BrushParam> paramsList2 = new List<BrushParam>();
         private string info1;
         private string info2;
-        //private List<string> attributes1 = new List<string>();
-        //private List<string> attributes2 = new List<string>();
-        //private List<KritaPresetParam> paramsCur;
-        //private List<string> attributesCur;
-        //private FileType fileTypeCur;
+        private string header1;
+        private string header2;
 
         public MainForm() {
             InitializeComponent();
@@ -48,7 +46,8 @@ namespace RebelleBrushInfo {
             TextBox textBoxBrush = null;
             List<BrushParam> paramsList = null;
             BrushParam param = null;
-            string info = null;
+            string info = "";
+            string header = "";
             switch (fileType) {
                 case FileType.Brush1:
                     nBrush = 1;
@@ -65,30 +64,36 @@ namespace RebelleBrushInfo {
             }
             textBoxInfo.Clear();
             paramsList = new List<BrushParam>();
-            info = "";
             String fileName = textBoxBrush.Text;
             if (fileName == null || fileName.Length == 0) {
-                registerOutput(fileType, info, paramsList);
+                registerOutput(fileType, info, header, paramsList);
                 Utils.Utils.errMsg("Brush " + nBrush + " is not defined");
                 return;
             }
             if (!File.Exists(fileName)) {
-                registerOutput(fileType, info, paramsList);
+                registerOutput(fileType, info, header, paramsList);
                 Utils.Utils.errMsg(fileName + " does not exist");
                 return;
             }
             // Get the selected brush fileName
             string brushName = Path.GetFileNameWithoutExtension(fileName);
             if (brushName == null | brushName.Length == 0) {
-                registerOutput(fileType, info, paramsList);
+                registerOutput(fileType, info, header, paramsList);
                 Utils.Utils.errMsg("Brush not specified");
                 return;
             }
-            info += brushName + NL + NL;
+            info += brushName + NL;
 
             // Get the metadata
-            var directories = ImageMetadataReader.ReadMetadata(fileName);
+            IReadOnlyList<MetadataExtractor.Directory> directories =
+                ImageMetadataReader.ReadMetadata(fileName);
+            info += getFileInfo(directories) + NL;
+            // Output above is the header
+            header = info;
+            info = "";
+
 #if TEST
+            // This is the simple output just using the metadata
             foreach (MetadataExtractor.Directory directory in directories) {
                 info += directory.Name + NL;
                 foreach (Tag tag in directory.Tags) {
@@ -100,213 +105,63 @@ namespace RebelleBrushInfo {
                 }
             }
 #else
-            int index, len;
-            string name = "", value = "";
+            // Make a List<MetadataDirectory> from the Dictionary
+            // So it can be sorted
+            List<Metadata> metadataList = new List<Metadata>();
             foreach (MetadataExtractor.Directory directory in directories) {
+                // Don't do the non-Rebelle ones
+                if (!directory.Name.Equals("PNG-tEXt") &&
+                    !directory.Name.Equals("PNG-zTXt")) {
+                    continue;
+                }
+                int len, index;
+                string name, text;
                 foreach (Tag tag in directory.Tags) {
-                    // Don't do the non-Rebelle ones
-                    if(!directory.Name.Equals("PNG-tEXt") &&
-                        !directory.Name.Equals("PNG-zTXt")) {
-                        continue;
-                    }
-                    //info += directory.Name + NL;
                     len = tag.Description.Length;
                     index = tag.Description.IndexOf(":");
+                    name = "";
+                    text = "";
                     if (index > -1) {
                         if (directory.Name.Equals("PNG-tEXt")) {
                             name = tag.Description.Substring(0, index);
-                            value = tag.Description.Substring(index + 1);
+                            text = tag.Description.Substring(index + 1);
                         } else if (directory.Name.Equals("PNG-zTXt")) {
                             name = tag.Description.Substring(0, index);
-                            value = tag.Description.Substring(index + 1);
+                            text = tag.Description.Substring(index + 1);
                         }
                     }
-                    param = new BrushParam(1, directory.Name, name, value);
-                    info += $"{param.info()}" + NL;
-                }
-                if (directory.HasError) {
-                    foreach (var error in directory.Errors)
-                        info += $"ERROR: {error}";
+                    metadataList.Add(new Metadata(directory.Name,
+                        name, text));
                 }
             }
+            metadataList.Sort((x, y) => x.Name.CompareTo(y.Name));
+
+            // Loop over it
+            foreach (Metadata metadata in metadataList) {
+                //info += directory.Name + NL;
+                param = new BrushParam(1, metadata.DirectoryName,
+                    metadata.Name, metadata.Text);
+                paramsList.Add(param);
+                info += $"{param.info()}" + NL;
+            }
+            paramsList.Sort();
 #endif
-
-            //SQLiteConnection conn = null;
-            //SQLiteDataReader dataReader;
-            //DateTime modTime = File.GetLastWriteTime(name);
-            //info += name + NL;
-            //info += "Brush: " + brushName + NL;
-            //info += "Using: "
-            //   + (radioButtonVariant.Checked ?
-            //   "NodeVariantID" : "NodeInitVariantID") + NL;
-            //info += "Modified: " + modTime + NL;
-            //// Find the node
-            //try {
-            //    string openName = DatabaseUtils.getSqliteOpenName(name);
-            //    using (conn = new SQLiteConnection("Data Source=" + openName
-            //        + ";Version=3;Read Only=True;")) {
-            //        conn.Open();
-            //        SQLiteCommand command;
-            //        command = conn.CreateCommand();
-            //        // Need to replace single quotes by double
-            //        // Don't want NodeVariantID or NodeInitVariantID = 0
-            //        command.CommandText = "SELECT NodeName, NodeVariantId, " +
-            //            "NodeInitVariantId FROM Node WHERE NodeName='"
-            //            + brushName.Replace("'", "''") + "'"
-            //            + " AND NodeVariantID != 0  AND NodeInitVariantID != 0";
-            //        List<NodeInfo> items = new List<NodeInfo>();
-            //        using (dataReader = command.ExecuteReader()) {
-            //            if (!dataReader.HasRows) {
-            //                Utils.Utils.errMsg("No matching rows looking for "
-            //                    + brushName);
-            //                registerOutput(fileType, info, paramsList);
-            //                return;
-            //            }
-            //            while (dataReader.Read()) {
-            //                nodeName = dataReader.GetString(0);
-            //                nodeVariantId = dataReader.GetInt32(1);
-            //                nodeInitVariantId = dataReader.GetInt32(2);
-            //                items.Add(new NodeInfo(nodeName, nodeVariantId, nodeInitVariantId));
-            //            }
-            //        }
-            //        if (items.Count == 0) {
-            //            Utils.Utils.errMsg("Did not find any matches for " + brushName);
-            //            registerOutput(fileType, info, paramsList);
-            //            return;
-            //        }
-            //        if (items.Count == 1) {
-            //            nodeName = items[0].NodeName;
-            //            nodeVariantId = items[0].NodeVariantId;
-            //            nodeInitVariantId = items[0].NodeInitVariantId;
-            //        } else {
-            //            // Found more than one matching item, prompt for which one
-            //            List<string> itemsList = new List<string>();
-            //            foreach (NodeInfo nodeInfo in items) {
-            //                itemsList.Add(nodeInfo.Info());
-            //            }
-            //            MultiChoiceListDialog dlg = new MultiChoiceListDialog(itemsList);
-            //            switch (fileType) {
-            //                case FileType.Brush1:
-            //                    dlg.Text = "Brush 1 Ambiguity";
-            //                    break;
-            //                case FileType.Brush2:
-            //                    dlg.Text = "Brush 2 Ambiguity";
-            //                    break;
-            //                default:
-            //                    dlg.Text = "Brush Ambiguity";
-            //                    break;
-            //            }
-            //            // Note that the ListBox has be set to have SelectionMode=One,
-            //            // not MultiExtended
-            //            if (dlg.ShowDialog() == System.Windows.Forms.DialogResult.OK) {
-            //                List<string> selectedList = dlg.SelectedList;
-            //                if (selectedList == null || selectedList.Count == 0) {
-            //                    Utils.Utils.errMsg("No items selected");
-            //                    registerOutput(fileType, info, paramsList);
-            //                    return;
-            //                }
-            //                // There should be only one entry
-            //                string item = selectedList[0];
-            //                nodeName = null;
-            //                foreach (NodeInfo nodeInfo in items) {
-            //                    if (item.Equals(nodeInfo.Info())) {
-            //                        nodeName = nodeInfo.NodeName;
-            //                        nodeVariantId = nodeInfo.NodeVariantId;
-            //                        nodeInitVariantId = nodeInfo.NodeInitVariantId;
-            //                    }
-            //                }
-            //            } else {
-            //                info += "Cancelled" + NL;
-            //                registerOutput(fileType, info, paramsList);
-            //                return;
-            //            }
-            //        }
-            //        // These should not happen
-            //        if (nodeName == null) {
-            //            Utils.Utils.errMsg("Failed to determine which brush");
-            //            registerOutput(fileType, info, paramsList);
-            //        }
-            //        if (!nodeName.Equals(brushName)) {
-            //            Utils.Utils.errMsg("Looking for " + brushName + ", found "
-            //                + nodeName);
-            //            registerOutput(fileType, info, paramsList);
-            //            return;
-            //        }
-            //        if (nodeVariantId == 0) {
-            //            Utils.Utils.errMsg(brushName
-            //                + " is not a brush (No NodeVariantId)");
-            //            registerOutput(fileType, info, paramsList);
-            //            return;
-            //        }
-            //    }
-            //} catch (Exception ex) {
-            //    Utils.Utils.excMsg("Error finding " + brushName, ex);
-            //    registerOutput(fileType, info, paramsList);
-            //    return;
-            //}
-
-            //// Find the variant
-            //conn = null;
-            //try {
-            //    string openName = DatabaseUtils.getSqliteOpenName(name);
-            //    using (conn = new SQLiteConnection("Data Source=" + openName
-            //        + ";Version=3;Read Only=True;")) {
-            //        conn.Open();
-            //        SQLiteCommand command;
-            //        command = conn.CreateCommand();
-            //        int variantId = (radioButtonVariant.Checked) ?
-            //            nodeVariantId : nodeInitVariantId;
-            //        command.CommandText = "SELECT * FROM Variant WHERE VariantID="
-            //                                + variantId;
-            //        using (dataReader = command.ExecuteReader()) {
-            //            if (!dataReader.HasRows) {
-            //                Utils.Utils.errMsg("No matching rows looking for VariantID = "
-            //                    + variantId);
-            //                registerOutput(fileType, info, paramsList);
-            //                return;
-            //            }
-            //            dataReader.Read();
-            //            nCols = dataReader.FieldCount;
-            //            if (print) {
-            //                appendInfo(info + NL);
-            //            }
-            //            for (int i = 0; i < nCols; i++) {
-            //                if (dataReader.IsDBNull(i)) {
-            //                    nNull++;
-            //                    continue;
-            //                }
-            //                param = new BrushParam(dataReader.GetName(i),
-            //                    dataReader.GetDataTypeName(i), dataReader.GetValue(i));
-            //                param.Value = dataReader.GetValue(i);
-            //                //    appendInfo(param.info());
-            //                //}
-            //                paramsList.Add(param);
-            //            }
-            //        }
-            //    }
-            //} catch (Exception ex) {
-            //    Utils.Utils.excMsg("Error finding VariantID=" + nodeVariantId, ex);
-            //    registerOutput(fileType, info, paramsList);
-            //    return;
-            //}
-            //info += "Columns: " + nCols + " Null: " + nNull + " Non-Null: "
-            //    + (nCols - nNull) + NL;
-            registerOutput(fileType, info, paramsList);
+            registerOutput(fileType, info, header, paramsList);
         }
 
         /// <summary>
         /// Compares the two files and displays the output.
         /// </summary>
         private void compare() {
-            // Process 1
+            // Process brush 1
             processBrush(FileType.Brush1, false);
-            if (params1.Count == 0) {
+            if (paramsList1.Count == 0) {
                 Utils.Utils.errMsg("Did not get params for Brush 1");
                 return;
             }
-            // Process 2
+            // Process brush 2
             processBrush(FileType.Brush2, false);
-            if (params2.Count == 0) {
+            if (paramsList2.Count == 0) {
                 Utils.Utils.errMsg("Did not get params for Brush 2");
                 return;
             }
@@ -316,53 +171,108 @@ namespace RebelleBrushInfo {
             printHeading(FileType.Brush1);
             appendInfo("2: ");
             printHeading(FileType.Brush2);
+
             // Look for items in 2 that are in 1
-            bool found;
             BrushParam foundParam = null;
-            foreach (BrushParam param1 in params1) {
-                found = false;
-                // Look for the same name
-                foreach (BrushParam param2 in params2) {
-                    if (param1.Name.Equals(param2.Name)) {
-                        found = true;
-                        foundParam = param2;
-                        break;
-                    }
-                }
-                if (!found) {
+            foreach (BrushParam param1 in paramsList1) {
+                foundParam = checkIfContained(param1, paramsList2);
+                if (foundParam == null) {
                     appendInfo(param1.Name + NL);
-                    appendInfo("  1: " + param1.Text);
-                    //appendImages(param1);
-                    appendInfo("  2: Not found in 2" + NL);
+                    appendInfo(param1.info("  1: ", false));
+                    appendInfo(indented("  2: Not found in 1", param1.Level));
                     continue;
                 }
-                if (found && !param1.equals(foundParam)) {
+                // !!!
+                if (foundParam != null && !param1.equals(foundParam)) {
+                    // Most interesting 1 and 2 are found and differ
                     appendInfo(param1.Name + NL);
-                    appendInfo("  1: " + param1.Text);
-                    //appendImages(param1);
-                    appendInfo("  2: " + foundParam.Text);
-                    //appendImages(foundParam);
+                    if (param1.Children == null && foundParam.Children == null) {
+                        // 1 and 2 both do not have children
+                        appendInfo("  1: " + param1.info(doChildren: false));
+                        appendInfo("  2: " + foundParam.info(doChildren: false));
+                    } else if (param1.Children != null && foundParam.Children == null) {
+                        // 1 has children, 2 does not
+                        appendInfo(param1.info("  1: ", doChildren: true));
+                        appendInfo(indented("  2: Not found in 1", param1.Level));
+                    } else if (param1.Children == null && foundParam.Children != null) {
+                        // 1 does not have children, 2 does
+                        appendInfo(indented("  1: Not found in 2", foundParam.Level));
+                        appendInfo(foundParam.info("  2: ", doChildren: true));
+                    } else {
+                        // Both have children
+                        // Only process first level of children
+                        // Look for the same name
+                        BrushParam foundParam1 = null;
+                        foreach (BrushParam param11 in param1.Children) {
+                            foundParam1 = checkIfContained(param11, foundParam.Children);
+                            if (foundParam1 == null) {
+                                // 2 not in 1 (children)
+                                appendInfo(param11.Name + NL);
+                                appendInfo(param11.info("  1: ", true));
+                                appendInfo(indented("  2: Not found in 1", param11.Level));
+                                continue;
+                            }
+                            if (foundParam1 != null && !param11.equals(foundParam1)) {
+                                // 1 and 2 both there and differ (children)
+                                appendInfo(param11.Name + NL);
+                                appendInfo(param11.info("1: ", true));
+                                appendInfo(foundParam1.info("2: ", true));
+                            }
+                        }
+                        //// Look for items in 2 that are not in 1
+                        //if (foundParam1 != null) {
+                        //    foreach (BrushParam param22 in foundParam.Children) {
+                        //        foundParam1 = checkIfContained(param22, param1.Children);
+                        //        if (foundParam1 == null) {
+                        //            // 1 not in 2 (children)
+                        //            appendInfo(foundParam.Name + NL);
+                        //            appendInfo(indented("  1: Not found in 2", param22.Level));
+                        //            appendInfo(param22.info("  2: ", false));
+                        //            continue;
+                        //        }
+                        //    }
+                        //}
+                    }
                 }
             }
 
             // Look for items in 2 that are not in 1
-            foreach (BrushParam param2 in params2) {
-                found = false;
-                // Look for the same name
-                foreach (BrushParam param1 in params1) {
-                    if (param1.Name.Equals(param2.Name)) {
-                        found = true;
-                        break;
-                    }
-                }
-                if (!found) {
+            foreach (BrushParam param2 in paramsList2) {
+                foundParam = checkIfContained(param2, paramsList1);
+                if (foundParam == null) {
                     appendInfo(param2.Name + NL);
-                    appendInfo("  1: Not found in 1" + NL);
-                    appendInfo("  2: " + param2.Text);
-                    //appendImages(param2);
+                    appendInfo(indented("  1: Not found in 2", param2.Level));
+                    appendInfo(param2.info("  2: ", false));
                     continue;
                 }
             }
+        }
+
+        BrushParam checkIfContained(BrushParam param, List<BrushParam> list) {
+            foreach (BrushParam param2 in list) {
+                if (param.Name == param2.Name) {
+                    return param2;
+                }
+            }
+            return null;
+        }
+
+        /// <summary>
+        /// Returns a string that is indented like BrushParam.info is. A NL is
+        /// added;
+        /// </summary>
+        /// <param name="text"></param>
+        /// <param name="level">The level to use for indentation. Get from a
+        /// BrushParam</param>
+        /// <param name="tab">The tab string to use, usually "    "</param>
+        /// <returns>The indented string.</returns>
+        private string indented(string text, int level, string tab = "    ") {
+            string info = "";
+            for (int i = 1; i < level; i++) {
+                info += tab;
+            }
+            info += text + NL;
+            return info;
         }
 
         /// <summary>
@@ -420,15 +330,17 @@ namespace RebelleBrushInfo {
         /// <param name="info"></param>
         /// <param name="paramsList"></param>
         private void registerOutput(FileType fileType, string info,
-            List<BrushParam> paramsList) {
+            string header, List<BrushParam> paramsList) {
             switch (fileType) {
                 case FileType.Brush1:
                     info1 = info;
-                    params1 = paramsList; ;
+                    header1 = header;
+                    paramsList1 = paramsList; ;
                     break;
                 case FileType.Brush2:
                     info2 = info;
-                    params2 = paramsList; ;
+                    header2 = header;
+                    paramsList2 = paramsList; ;
                     break;
             }
         }
@@ -441,10 +353,10 @@ namespace RebelleBrushInfo {
         private void printHeading(FileType type) {
             switch (type) {
                 case FileType.Brush1:
-                    appendInfo(info1 + NL);
+                    appendInfo(header1);
                     break;
                 case FileType.Brush2:
-                    appendInfo(info2 + NL);
+                    appendInfo(header2);
                     break;
             }
         }
@@ -502,14 +414,29 @@ namespace RebelleBrushInfo {
             textBoxInfo.SelectedText = text;
         }
 
+        private string getFileInfo(IReadOnlyList<MetadataExtractor.Directory> directories) {
+            StringBuilder info = new StringBuilder();
+            foreach (MetadataExtractor.Directory directory in directories) {
+                if (directory.Name.Equals("File")) {
+                    foreach (Tag tag in directory.Tags) {
+                        info.Append(tag.Name).Append(" : ")
+                            .Append(tag.Description).Append(NL);
+                    }
+                    return info.ToString();
+                }
+            }
+            return null;
+        }
+
         private void OnProcess1Click(object sender, EventArgs e) {
             processBrush(FileType.Brush1, true);
             textBoxInfo.Clear();
             printHeading(FileType.Brush1);
-            foreach (BrushParam param in params1) {
+            foreach (BrushParam param in paramsList1) {
                 appendInfo(param.info());
                 //appendImages(param);
             }
+
             // Check for errors
             if (checkForErrors()) {
                 InsertAtInfoTop("!!! Note: There were errors during processing"
@@ -521,7 +448,7 @@ namespace RebelleBrushInfo {
             processBrush(FileType.Brush2, true);
             textBoxInfo.Clear();
             printHeading(FileType.Brush2);
-            foreach (BrushParam param in params2) {
+            foreach (BrushParam param in paramsList2) {
                 appendInfo(param.info());
                 //appendImages(param);
             }
