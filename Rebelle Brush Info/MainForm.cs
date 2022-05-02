@@ -29,8 +29,12 @@ namespace RebelleBrushInfo {
         private string header1;
         private string header2;
 
+        public static Control InfoControl { get; set; }
+
         public MainForm() {
             InitializeComponent();
+
+            InfoControl = textBoxInfo;
 
             textBoxBrush1.Text = Properties.Settings.Default.DatabaseName1;
             textBoxCrush2.Text = Properties.Settings.Default.DatabaseName2;
@@ -355,6 +359,20 @@ namespace RebelleBrushInfo {
             } catch (Exception ex) {
                 Utils.Utils.excMsg("Error processing effector images", ex);
             }
+        }
+
+        /// <summary>
+        /// Generates an RTF string from the given base64 representation.
+        /// </summary>
+        /// <param name="base64">The base64 string</param>
+        /// <returns></returns>
+        private string generateRtfImage(string base64) {
+            byte[] bytes = Convert.FromBase64String(base64);
+            Bitmap bm;
+            using (MemoryStream ms = new MemoryStream(bytes)) {
+                bm = (Bitmap)Image.FromStream(ms);
+            }
+            return Utils.RTFUtils.imageRtf(textBoxInfo, bm);
         }
 
         private void OnFormClosing(object sender, FormClosingEventArgs e) {
