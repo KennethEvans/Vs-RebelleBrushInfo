@@ -11,6 +11,7 @@ namespace RebelleBrushInfo {
 
     public class BrushParam : IComparable<BrushParam> {
         public static readonly String NL = Environment.NewLine;
+        public static readonly char LineBreak = '\u00d0';
         public int Level { get; }
         public string Name { get; }
         public string Text { get; }
@@ -246,44 +247,13 @@ namespace RebelleBrushInfo {
         }
 
         /// <summary>
-        /// Generates an RTF string from the given base64 representation.
-        /// </summary>
-        /// <param name="base64">The base64 string.</param>
-        /// <returns></returns>
-        private string generateRtfImage(string base64) {
-            byte[] bytes = Convert.FromBase64String(base64);
-            Bitmap bm;
-            using (MemoryStream ms = new MemoryStream(bytes)) {
-                bm = (Bitmap)Image.FromStream(ms);
-            }
-            Control control = MainForm.InfoControl;
-            return Utils.RTFUtils.imageRtf(control, bm);
-        }
-
-        /// <summary>
-        /// Appends the text to the RichTextBox.  Moves the caret to the end
-        /// of the RichTextBox's text then sets rtb.selectedRtf.
-        /// </summary>
-        /// <remarks>
-        /// NOTE: The image is inserted wherever the caret is at the time of the call,
-        /// and if any text is selected, that text is replaced.
-        /// </remarks>
-        /// <param name="text">The string to insert.</param>
-        public static void appendRtb(string text) {
-            RichTextBox rtb = (RichTextBox)MainForm.InfoControl;
-            // Move carret to the end of the text
-            rtb.Select(rtb.TextLength, 0);
-            rtb.SelectedRtf = text;
-        }
-
-        /// <summary>
         /// Gets a hash code for a string that is reasonably unique. 
         /// </summary>
         /// <param name="str"></param>
         /// <returns></returns>
         private string getHashForString(string str) {
             string hash;
-            using (System.Security.Cryptography.MD5 md5 = 
+            using (System.Security.Cryptography.MD5 md5 =
                 System.Security.Cryptography.MD5.Create()) {
                 hash = BitConverter.ToString(
                   md5.ComputeHash(Encoding.UTF8.GetBytes(str))
@@ -297,7 +267,7 @@ namespace RebelleBrushInfo {
         /// of the Name and the result of getValueByString().
         /// </summary>
         /// <returns></returns>
-        public String info(string prefix = "", bool doChildren = true,
+        public string info(string prefix = "", bool doChildren = true,
                     string tab = "   ") {
             string TAB = "";
             for (int i = 1; i < Level; i++) {
@@ -324,8 +294,9 @@ namespace RebelleBrushInfo {
                     }
                     break;
                 case ParamType.IMAGE:
-                    value = "<Image: Hash= " + getHashForString(Text) + ">";
+                    //value = "<Image: Hash= " + getHashForString(Text) + ">";
                     //value = generateRtfImage(Text);
+                    value = LineBreak + Text + LineBreak;
                     break;
                 case ParamType.TEXT:
                     value = Text;

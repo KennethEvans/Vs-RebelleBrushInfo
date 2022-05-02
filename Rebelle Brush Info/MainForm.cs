@@ -18,6 +18,7 @@ namespace RebelleBrushInfo {
         enum FileType { Brush1, Brush2 };
         public static readonly int PROCESS_TIMEOUT = 5000; // ms
         public static readonly String NL = Environment.NewLine;
+        private static readonly int imageSize = 256;
         private static ScrolledHTMLDialog overviewDlg;
         //private static ScrolledRichTextDialog textDlg;
         private static FindDialog findDlg;
@@ -28,13 +29,8 @@ namespace RebelleBrushInfo {
         private string info2;
         private string header1;
         private string header2;
-
-        public static Control InfoControl { get; set; }
-
         public MainForm() {
             InitializeComponent();
-
-            InfoControl = textBoxInfo;
 
             textBoxBrush1.Text = Properties.Settings.Default.DatabaseName1;
             textBoxCrush2.Text = Properties.Settings.Default.DatabaseName2;
@@ -186,9 +182,62 @@ namespace RebelleBrushInfo {
             foreach (BrushParam param in paramsList2) {
                 BrushParam.addToDictionary(2, param, items);
             }
-
             string info = getItemInfo(items, all);
-            appendInfo(info);
+
+            // Parse the info to get the images so they can be inserted
+            try {
+                string[] tokens = info.Split(BrushParam.LineBreak);
+                Font oldFont = textBoxInfo.SelectionFont;
+                for (int i = 0; i < tokens.Length; i++) {
+                    string token = tokens[i];
+                    if (i % 2 == 1) {
+                        // Even numbered tokens are base64 images
+                        string base64 = generateRtfImage(token);
+                        appendInfo(NL + "    ");
+                        Utils.RTFUtils.insertRtb(textBoxInfo, base64);
+                        textBoxInfo.SelectionFont = oldFont;
+                        appendInfo("    ");
+                        //appendInfo("<Image>");
+                    } else {
+                        appendInfo(token);
+                    }
+                }
+            } catch (Exception ex) {
+                string msg = "Error parsing images";
+                //Utils.Utils.excMsg(msg, ex);
+                appendInfo(msg + NL);
+                appendInfo(ex.Message);
+            }
+        }
+
+        /// <summary>
+        /// Generates an RTF string from the given base64 representation.
+        /// </summary>
+        /// <param name="base64">The base64 string.</param>
+        /// <returns></returns>
+        private string generateRtfImage(string base64) {
+            byte[] bytes = Convert.FromBase64String(base64);
+            Bitmap bm;
+            using (MemoryStream ms = new MemoryStream(bytes)) {
+                bm = (Bitmap)Image.FromStream(ms);
+                bm = new Bitmap(bm, new Size(imageSize, imageSize));
+            }
+            return Utils.RTFUtils.imageRtf(textBoxInfo, bm);
+        }
+
+        /// <summary>
+        /// Appends the text to the RichTextBox.  Moves the caret to the end
+        /// of the RichTextBox's text then sets rtb.selectedRtf.
+        /// </summary>
+        /// <remarks>
+        /// NOTE: The image is inserted wherever the caret is at the time of the call,
+        /// and if any text is selected, that text is replaced.
+        /// </remarks>
+        /// <param name="text">The string to insert.</param>
+        public static void appendRtb(RichTextBox rtb, string text) {
+            // Move carret to the end of the text
+            rtb.Select(rtb.TextLength, 0);
+            rtb.SelectedRtf = text;
         }
 
         /// <summary>
@@ -361,20 +410,6 @@ namespace RebelleBrushInfo {
             }
         }
 
-        /// <summary>
-        /// Generates an RTF string from the given base64 representation.
-        /// </summary>
-        /// <param name="base64">The base64 string</param>
-        /// <returns></returns>
-        private string generateRtfImage(string base64) {
-            byte[] bytes = Convert.FromBase64String(base64);
-            Bitmap bm;
-            using (MemoryStream ms = new MemoryStream(bytes)) {
-                bm = (Bitmap)Image.FromStream(ms);
-            }
-            return Utils.RTFUtils.imageRtf(textBoxInfo, bm);
-        }
-
         private void OnFormClosing(object sender, FormClosingEventArgs e) {
             Properties.Settings.Default.DatabaseName1 = textBoxBrush1.Text;
             Properties.Settings.Default.DatabaseName2 = textBoxCrush2.Text;
@@ -425,8 +460,30 @@ namespace RebelleBrushInfo {
             textBoxInfo.Clear();
             printHeading(FileType.Brush1);
             foreach (BrushParam param in paramsList1) {
-                appendInfo(param.info());
-                //appendImages(param);
+                // Parse the info to get the images so they can be inserted
+                try {
+                    string[] tokens = param.info().Split(BrushParam.LineBreak);
+                    Font oldFont = textBoxInfo.SelectionFont;
+                    for (int i = 0; i < tokens.Length; i++) {
+                        string token = tokens[i];
+                        if (i % 2 == 1) {
+                            // Even numbered tokens are base64 images
+                            string base64 = generateRtfImage(token);
+                            appendInfo(NL + "    ");
+                            Utils.RTFUtils.insertRtb(textBoxInfo, base64);
+                            textBoxInfo.SelectionFont = oldFont;
+                            appendInfo("    ");
+                            //appendInfo("<Image>");
+                        } else {
+                            appendInfo(token);
+                        }
+                    }
+                } catch (Exception ex) {
+                    string msg = "Error parsing images";
+                    //Utils.Utils.excMsg(msg, ex);
+                    appendInfo(msg + NL);
+                    appendInfo(ex.Message);
+                }
             }
 
             // Check for errors
@@ -441,8 +498,30 @@ namespace RebelleBrushInfo {
             textBoxInfo.Clear();
             printHeading(FileType.Brush2);
             foreach (BrushParam param in paramsList2) {
-                appendInfo(param.info());
-                //appendImages(param);
+                // Parse the info to get the images so they can be inserted
+                try {
+                    string[] tokens = param.info().Split(BrushParam.LineBreak);
+                    Font oldFont = textBoxInfo.SelectionFont;
+                    for (int i = 0; i < tokens.Length; i++) {
+                        string token = tokens[i];
+                        if (i % 2 == 1) {
+                            // Even numbered tokens are base64 images
+                            string base64 = generateRtfImage(token);
+                            appendInfo(NL + "    ");
+                            Utils.RTFUtils.insertRtb(textBoxInfo, base64);
+                            textBoxInfo.SelectionFont = oldFont;
+                            appendInfo("    ");
+                            //appendInfo("<Image>");
+                        } else {
+                            appendInfo(token);
+                        }
+                    }
+                } catch (Exception ex) {
+                    string msg = "Error parsing images";
+                    //Utils.Utils.excMsg(msg, ex);
+                    appendInfo(msg + NL);
+                    appendInfo(ex.Message);
+                }
             }
             // Check for errors
             if (checkForErrors()) {
