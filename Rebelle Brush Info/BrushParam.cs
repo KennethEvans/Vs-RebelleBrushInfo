@@ -253,9 +253,7 @@ namespace RebelleBrushInfo {
             for (int i = 1; i < Level; i++) {
                 TAB += tab;
             }
-            if (Level < 3) {
-                TAB += prefix;
-            }
+            TAB += prefix;
             StringBuilder info;
             info = new StringBuilder();
             //info.Append(TAB).Append(Type).Append(" ");

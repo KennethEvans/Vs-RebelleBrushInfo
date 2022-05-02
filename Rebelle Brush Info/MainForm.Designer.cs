@@ -107,7 +107,6 @@
             // 
             // menuStrip1
             // 
-            this.menuStrip1.GripMargin = new System.Windows.Forms.Padding(2, 2, 0, 2);
             this.menuStrip1.ImageScalingSize = new System.Drawing.Size(40, 40);
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.fileToolStripMenuItem,
@@ -562,6 +561,7 @@
             this.button1.Text = "Compare *";
             this.toolTip.SetToolTip(this.button1, "Compare the brushes, showing all values.");
             this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.OnCompareAllClick);
             // 
             // buttonQuit
             // 
