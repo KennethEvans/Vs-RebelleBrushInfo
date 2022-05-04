@@ -28,10 +28,6 @@
             this.tableLayoutPanelTop = new System.Windows.Forms.TableLayoutPanel();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.showToolHierarchyToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.database1ToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
-            this.database2ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this.saveInfoAsRTFToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.quitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -39,14 +35,14 @@
             this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.groupBoxBrush1 = new System.Windows.Forms.GroupBox();
             this.tableLayoutPanelGroupBrush1 = new System.Windows.Forms.TableLayoutPanel();
-            this.tableLayoutPanelDatabase1 = new System.Windows.Forms.TableLayoutPanel();
+            this.tableLayoutPanelBrush1 = new System.Windows.Forms.TableLayoutPanel();
             this.textBoxBrush1 = new System.Windows.Forms.TextBox();
             this.buttonFileBrowse1 = new System.Windows.Forms.Button();
             this.labelFile1 = new System.Windows.Forms.Label();
             this.flowLayoutPanelBrush1 = new System.Windows.Forms.FlowLayoutPanel();
             this.groupBoxBrush2 = new System.Windows.Forms.GroupBox();
             this.tableLayoutPanelGroupBrush2 = new System.Windows.Forms.TableLayoutPanel();
-            this.tableLayoutPanelDatabase2 = new System.Windows.Forms.TableLayoutPanel();
+            this.tableLayoutPanelBrush2 = new System.Windows.Forms.TableLayoutPanel();
             this.labelFile2 = new System.Windows.Forms.Label();
             this.textBoxCrush2 = new System.Windows.Forms.TextBox();
             this.buttonBrowseFile2 = new System.Windows.Forms.Button();
@@ -72,10 +68,10 @@
             this.menuStrip1.SuspendLayout();
             this.groupBoxBrush1.SuspendLayout();
             this.tableLayoutPanelGroupBrush1.SuspendLayout();
-            this.tableLayoutPanelDatabase1.SuspendLayout();
+            this.tableLayoutPanelBrush1.SuspendLayout();
             this.groupBoxBrush2.SuspendLayout();
             this.tableLayoutPanelGroupBrush2.SuspendLayout();
-            this.tableLayoutPanelDatabase2.SuspendLayout();
+            this.tableLayoutPanelBrush2.SuspendLayout();
             this.contextMenuStrip1.SuspendLayout();
             this.flowLayoutPanelButtons.SuspendLayout();
             this.SuspendLayout();
@@ -107,66 +103,37 @@
             // 
             // menuStrip1
             // 
+            this.menuStrip1.GripMargin = new System.Windows.Forms.Padding(2, 2, 0, 2);
             this.menuStrip1.ImageScalingSize = new System.Drawing.Size(40, 40);
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.fileToolStripMenuItem,
             this.helpToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(1588, 49);
+            this.menuStrip1.Size = new System.Drawing.Size(1588, 52);
             this.menuStrip1.TabIndex = 0;
             this.menuStrip1.Text = "menuStrip1";
             // 
             // fileToolStripMenuItem
             // 
             this.fileToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.showToolHierarchyToolStripMenuItem,
-            this.toolStripSeparator2,
             this.saveInfoAsRTFToolStripMenuItem,
             this.quitToolStripMenuItem});
             this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
-            this.fileToolStripMenuItem.Size = new System.Drawing.Size(87, 45);
+            this.fileToolStripMenuItem.Size = new System.Drawing.Size(87, 48);
             this.fileToolStripMenuItem.Text = "File";
-            // 
-            // showToolHierarchyToolStripMenuItem
-            // 
-            this.showToolHierarchyToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.database1ToolStripMenuItem1,
-            this.database2ToolStripMenuItem});
-            this.showToolHierarchyToolStripMenuItem.Name = "showToolHierarchyToolStripMenuItem";
-            this.showToolHierarchyToolStripMenuItem.Size = new System.Drawing.Size(454, 54);
-            this.showToolHierarchyToolStripMenuItem.Text = "Show Tool Hierarchy";
-            // 
-            // database1ToolStripMenuItem1
-            // 
-            this.database1ToolStripMenuItem1.Name = "database1ToolStripMenuItem1";
-            this.database1ToolStripMenuItem1.Size = new System.Drawing.Size(352, 54);
-            this.database1ToolStripMenuItem1.Text = "Database 1...";
-            this.database1ToolStripMenuItem1.Click += new System.EventHandler(this.OnShowToolHierarchy);
-            // 
-            // database2ToolStripMenuItem
-            // 
-            this.database2ToolStripMenuItem.Name = "database2ToolStripMenuItem";
-            this.database2ToolStripMenuItem.Size = new System.Drawing.Size(352, 54);
-            this.database2ToolStripMenuItem.Text = "Database 2...";
-            this.database2ToolStripMenuItem.Click += new System.EventHandler(this.OnShowToolHierarchy);
-            // 
-            // toolStripSeparator2
-            // 
-            this.toolStripSeparator2.Name = "toolStripSeparator2";
-            this.toolStripSeparator2.Size = new System.Drawing.Size(451, 6);
             // 
             // saveInfoAsRTFToolStripMenuItem
             // 
             this.saveInfoAsRTFToolStripMenuItem.Name = "saveInfoAsRTFToolStripMenuItem";
-            this.saveInfoAsRTFToolStripMenuItem.Size = new System.Drawing.Size(454, 54);
+            this.saveInfoAsRTFToolStripMenuItem.Size = new System.Drawing.Size(448, 54);
             this.saveInfoAsRTFToolStripMenuItem.Text = "Save Info as RTF...";
             this.saveInfoAsRTFToolStripMenuItem.Click += new System.EventHandler(this.OnSaveRtfClick);
             // 
             // quitToolStripMenuItem
             // 
             this.quitToolStripMenuItem.Name = "quitToolStripMenuItem";
-            this.quitToolStripMenuItem.Size = new System.Drawing.Size(454, 54);
+            this.quitToolStripMenuItem.Size = new System.Drawing.Size(448, 54);
             this.quitToolStripMenuItem.Text = "Quit";
             this.quitToolStripMenuItem.Click += new System.EventHandler(this.OnQuitClick);
             // 
@@ -176,20 +143,20 @@
             this.overviewToolStripMenuItem,
             this.aboutToolStripMenuItem});
             this.helpToolStripMenuItem.Name = "helpToolStripMenuItem";
-            this.helpToolStripMenuItem.Size = new System.Drawing.Size(104, 45);
+            this.helpToolStripMenuItem.Size = new System.Drawing.Size(104, 48);
             this.helpToolStripMenuItem.Text = "Help";
             // 
             // overviewToolStripMenuItem
             // 
             this.overviewToolStripMenuItem.Name = "overviewToolStripMenuItem";
-            this.overviewToolStripMenuItem.Size = new System.Drawing.Size(327, 54);
+            this.overviewToolStripMenuItem.Size = new System.Drawing.Size(448, 54);
             this.overviewToolStripMenuItem.Text = "Overview...";
             this.overviewToolStripMenuItem.Click += new System.EventHandler(this.OnOverviewClick);
             // 
             // aboutToolStripMenuItem
             // 
             this.aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
-            this.aboutToolStripMenuItem.Size = new System.Drawing.Size(327, 54);
+            this.aboutToolStripMenuItem.Size = new System.Drawing.Size(448, 54);
             this.aboutToolStripMenuItem.Text = "About...";
             this.aboutToolStripMenuItem.Click += new System.EventHandler(this.OnAboutClick);
             // 
@@ -200,7 +167,7 @@
             this.groupBoxBrush1.BackColor = System.Drawing.SystemColors.Control;
             this.groupBoxBrush1.Controls.Add(this.tableLayoutPanelGroupBrush1);
             this.groupBoxBrush1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.groupBoxBrush1.Location = new System.Drawing.Point(5, 59);
+            this.groupBoxBrush1.Location = new System.Drawing.Point(5, 62);
             this.groupBoxBrush1.Margin = new System.Windows.Forms.Padding(5, 10, 5, 10);
             this.groupBoxBrush1.Name = "groupBoxBrush1";
             this.groupBoxBrush1.Padding = new System.Windows.Forms.Padding(10, 2, 3, 2);
@@ -216,7 +183,7 @@
             this.tableLayoutPanelGroupBrush1.BackColor = System.Drawing.SystemColors.Control;
             this.tableLayoutPanelGroupBrush1.ColumnCount = 1;
             this.tableLayoutPanelGroupBrush1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanelGroupBrush1.Controls.Add(this.tableLayoutPanelDatabase1, 0, 0);
+            this.tableLayoutPanelGroupBrush1.Controls.Add(this.tableLayoutPanelBrush1, 0, 0);
             this.tableLayoutPanelGroupBrush1.Controls.Add(this.flowLayoutPanelBrush1, 0, 1);
             this.tableLayoutPanelGroupBrush1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanelGroupBrush1.Location = new System.Drawing.Point(10, 33);
@@ -229,28 +196,28 @@
             this.tableLayoutPanelGroupBrush1.Size = new System.Drawing.Size(1565, 56);
             this.tableLayoutPanelGroupBrush1.TabIndex = 2;
             // 
-            // tableLayoutPanelDatabase1
+            // tableLayoutPanelBrush1
             // 
-            this.tableLayoutPanelDatabase1.AutoSize = true;
-            this.tableLayoutPanelDatabase1.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.tableLayoutPanelDatabase1.BackColor = System.Drawing.SystemColors.Control;
-            this.tableLayoutPanelDatabase1.ColumnCount = 3;
-            this.tableLayoutPanelDatabase1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-            this.tableLayoutPanelDatabase1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanelDatabase1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-            this.tableLayoutPanelDatabase1.Controls.Add(this.textBoxBrush1, 1, 0);
-            this.tableLayoutPanelDatabase1.Controls.Add(this.buttonFileBrowse1, 2, 0);
-            this.tableLayoutPanelDatabase1.Controls.Add(this.labelFile1, 0, 0);
-            this.tableLayoutPanelDatabase1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tableLayoutPanelDatabase1.Location = new System.Drawing.Point(3, 2);
-            this.tableLayoutPanelDatabase1.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.tableLayoutPanelDatabase1.Name = "tableLayoutPanelDatabase1";
-            this.tableLayoutPanelDatabase1.RowCount = 3;
-            this.tableLayoutPanelDatabase1.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanelDatabase1.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanelDatabase1.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanelDatabase1.Size = new System.Drawing.Size(1559, 46);
-            this.tableLayoutPanelDatabase1.TabIndex = 2;
+            this.tableLayoutPanelBrush1.AutoSize = true;
+            this.tableLayoutPanelBrush1.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.tableLayoutPanelBrush1.BackColor = System.Drawing.SystemColors.Control;
+            this.tableLayoutPanelBrush1.ColumnCount = 3;
+            this.tableLayoutPanelBrush1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+            this.tableLayoutPanelBrush1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tableLayoutPanelBrush1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+            this.tableLayoutPanelBrush1.Controls.Add(this.textBoxBrush1, 1, 0);
+            this.tableLayoutPanelBrush1.Controls.Add(this.buttonFileBrowse1, 2, 0);
+            this.tableLayoutPanelBrush1.Controls.Add(this.labelFile1, 0, 0);
+            this.tableLayoutPanelBrush1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tableLayoutPanelBrush1.Location = new System.Drawing.Point(3, 2);
+            this.tableLayoutPanelBrush1.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.tableLayoutPanelBrush1.Name = "tableLayoutPanelBrush1";
+            this.tableLayoutPanelBrush1.RowCount = 3;
+            this.tableLayoutPanelBrush1.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableLayoutPanelBrush1.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableLayoutPanelBrush1.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableLayoutPanelBrush1.Size = new System.Drawing.Size(1559, 46);
+            this.tableLayoutPanelBrush1.TabIndex = 2;
             // 
             // textBoxBrush1
             // 
@@ -260,7 +227,7 @@
             this.textBoxBrush1.Name = "textBoxBrush1";
             this.textBoxBrush1.Size = new System.Drawing.Size(1340, 38);
             this.textBoxBrush1.TabIndex = 1;
-            this.toolTip.SetToolTip(this.textBoxBrush1, "Database or SUT file for 1.");
+            this.toolTip.SetToolTip(this.textBoxBrush1, "File for brush 1.");
             // 
             // buttonFileBrowse1
             // 
@@ -274,9 +241,9 @@
             this.buttonFileBrowse1.Size = new System.Drawing.Size(119, 42);
             this.buttonFileBrowse1.TabIndex = 2;
             this.buttonFileBrowse1.Text = "Browse";
-            this.toolTip.SetToolTip(this.buttonFileBrowse1, "Browse for Database or SUT file for  1.");
+            this.toolTip.SetToolTip(this.buttonFileBrowse1, "Browse for file for  brush 1.");
             this.buttonFileBrowse1.UseVisualStyleBackColor = false;
-            this.buttonFileBrowse1.Click += new System.EventHandler(this.OnBrowseDatabase1Click);
+            this.buttonFileBrowse1.Click += new System.EventHandler(this.OnBrowseBrush1Click);
             // 
             // labelFile1
             // 
@@ -290,7 +257,7 @@
             this.labelFile1.TabIndex = 0;
             this.labelFile1.Text = "Path:";
             this.labelFile1.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.toolTip.SetToolTip(this.labelFile1, "Database or SUT file for 1.");
+            this.toolTip.SetToolTip(this.labelFile1, "File for brush 1.");
             // 
             // flowLayoutPanelBrush1
             // 
@@ -308,7 +275,7 @@
             this.groupBoxBrush2.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.groupBoxBrush2.Controls.Add(this.tableLayoutPanelGroupBrush2);
             this.groupBoxBrush2.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.groupBoxBrush2.Location = new System.Drawing.Point(5, 170);
+            this.groupBoxBrush2.Location = new System.Drawing.Point(5, 173);
             this.groupBoxBrush2.Margin = new System.Windows.Forms.Padding(5, 10, 5, 10);
             this.groupBoxBrush2.Name = "groupBoxBrush2";
             this.groupBoxBrush2.Padding = new System.Windows.Forms.Padding(10, 2, 3, 2);
@@ -323,7 +290,7 @@
             this.tableLayoutPanelGroupBrush2.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.tableLayoutPanelGroupBrush2.ColumnCount = 1;
             this.tableLayoutPanelGroupBrush2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanelGroupBrush2.Controls.Add(this.tableLayoutPanelDatabase2, 0, 0);
+            this.tableLayoutPanelGroupBrush2.Controls.Add(this.tableLayoutPanelBrush2, 0, 0);
             this.tableLayoutPanelGroupBrush2.Controls.Add(this.flowLayoutPanelBrush2, 0, 1);
             this.tableLayoutPanelGroupBrush2.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanelGroupBrush2.Location = new System.Drawing.Point(10, 33);
@@ -336,26 +303,26 @@
             this.tableLayoutPanelGroupBrush2.Size = new System.Drawing.Size(1565, 56);
             this.tableLayoutPanelGroupBrush2.TabIndex = 4;
             // 
-            // tableLayoutPanelDatabase2
+            // tableLayoutPanelBrush2
             // 
-            this.tableLayoutPanelDatabase2.AutoSize = true;
-            this.tableLayoutPanelDatabase2.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.tableLayoutPanelDatabase2.ColumnCount = 3;
-            this.tableLayoutPanelDatabase2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-            this.tableLayoutPanelDatabase2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanelDatabase2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-            this.tableLayoutPanelDatabase2.Controls.Add(this.labelFile2, 0, 0);
-            this.tableLayoutPanelDatabase2.Controls.Add(this.textBoxCrush2, 1, 0);
-            this.tableLayoutPanelDatabase2.Controls.Add(this.buttonBrowseFile2, 2, 0);
-            this.tableLayoutPanelDatabase2.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tableLayoutPanelDatabase2.Location = new System.Drawing.Point(3, 2);
-            this.tableLayoutPanelDatabase2.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.tableLayoutPanelDatabase2.Name = "tableLayoutPanelDatabase2";
-            this.tableLayoutPanelDatabase2.RowCount = 2;
-            this.tableLayoutPanelDatabase2.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanelDatabase2.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanelDatabase2.Size = new System.Drawing.Size(1559, 46);
-            this.tableLayoutPanelDatabase2.TabIndex = 5;
+            this.tableLayoutPanelBrush2.AutoSize = true;
+            this.tableLayoutPanelBrush2.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.tableLayoutPanelBrush2.ColumnCount = 3;
+            this.tableLayoutPanelBrush2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+            this.tableLayoutPanelBrush2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tableLayoutPanelBrush2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+            this.tableLayoutPanelBrush2.Controls.Add(this.labelFile2, 0, 0);
+            this.tableLayoutPanelBrush2.Controls.Add(this.textBoxCrush2, 1, 0);
+            this.tableLayoutPanelBrush2.Controls.Add(this.buttonBrowseFile2, 2, 0);
+            this.tableLayoutPanelBrush2.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tableLayoutPanelBrush2.Location = new System.Drawing.Point(3, 2);
+            this.tableLayoutPanelBrush2.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.tableLayoutPanelBrush2.Name = "tableLayoutPanelBrush2";
+            this.tableLayoutPanelBrush2.RowCount = 2;
+            this.tableLayoutPanelBrush2.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableLayoutPanelBrush2.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableLayoutPanelBrush2.Size = new System.Drawing.Size(1559, 46);
+            this.tableLayoutPanelBrush2.TabIndex = 5;
             // 
             // labelFile2
             // 
@@ -369,7 +336,7 @@
             this.labelFile2.TabIndex = 0;
             this.labelFile2.Text = "Path:";
             this.labelFile2.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.toolTip.SetToolTip(this.labelFile2, "Database or SUT file for 2.");
+            this.toolTip.SetToolTip(this.labelFile2, "Brush or SUT file for 2.");
             // 
             // textBoxCrush2
             // 
@@ -379,7 +346,7 @@
             this.textBoxCrush2.Name = "textBoxCrush2";
             this.textBoxCrush2.Size = new System.Drawing.Size(1340, 38);
             this.textBoxCrush2.TabIndex = 1;
-            this.toolTip.SetToolTip(this.textBoxCrush2, "Database or SUT file for 2.");
+            this.toolTip.SetToolTip(this.textBoxCrush2, "File for brush 2.");
             // 
             // buttonBrowseFile2
             // 
@@ -393,9 +360,9 @@
             this.buttonBrowseFile2.Size = new System.Drawing.Size(119, 42);
             this.buttonBrowseFile2.TabIndex = 2;
             this.buttonBrowseFile2.Text = "Browse";
-            this.toolTip.SetToolTip(this.buttonBrowseFile2, "Browse for Database or SUT file for  2\r\n..");
+            this.toolTip.SetToolTip(this.buttonBrowseFile2, "Browse file for  brush 2\r\n..");
             this.buttonBrowseFile2.UseVisualStyleBackColor = false;
-            this.buttonBrowseFile2.Click += new System.EventHandler(this.OnBrowseDatabase2Click);
+            this.buttonBrowseFile2.Click += new System.EventHandler(this.OnBrowseBrush2Click);
             // 
             // flowLayoutPanelBrush2
             // 
@@ -411,10 +378,10 @@
             // 
             this.textBoxInfo.ContextMenuStrip = this.contextMenuStrip1;
             this.textBoxInfo.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.textBoxInfo.Location = new System.Drawing.Point(3, 273);
+            this.textBoxInfo.Location = new System.Drawing.Point(3, 276);
             this.textBoxInfo.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.textBoxInfo.Name = "textBoxInfo";
-            this.textBoxInfo.Size = new System.Drawing.Size(1582, 937);
+            this.textBoxInfo.Size = new System.Drawing.Size(1582, 934);
             this.textBoxInfo.TabIndex = 3;
             this.textBoxInfo.Text = "";
             // 
@@ -597,14 +564,14 @@
             this.groupBoxBrush1.PerformLayout();
             this.tableLayoutPanelGroupBrush1.ResumeLayout(false);
             this.tableLayoutPanelGroupBrush1.PerformLayout();
-            this.tableLayoutPanelDatabase1.ResumeLayout(false);
-            this.tableLayoutPanelDatabase1.PerformLayout();
+            this.tableLayoutPanelBrush1.ResumeLayout(false);
+            this.tableLayoutPanelBrush1.PerformLayout();
             this.groupBoxBrush2.ResumeLayout(false);
             this.groupBoxBrush2.PerformLayout();
             this.tableLayoutPanelGroupBrush2.ResumeLayout(false);
             this.tableLayoutPanelGroupBrush2.PerformLayout();
-            this.tableLayoutPanelDatabase2.ResumeLayout(false);
-            this.tableLayoutPanelDatabase2.PerformLayout();
+            this.tableLayoutPanelBrush2.ResumeLayout(false);
+            this.tableLayoutPanelBrush2.PerformLayout();
             this.contextMenuStrip1.ResumeLayout(false);
             this.flowLayoutPanelButtons.ResumeLayout(false);
             this.flowLayoutPanelButtons.PerformLayout();
@@ -626,11 +593,11 @@
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanelGroupBrush1;
         private System.Windows.Forms.GroupBox groupBoxBrush2;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanelGroupBrush2;
-        private System.Windows.Forms.TableLayoutPanel tableLayoutPanelDatabase2;
+        private System.Windows.Forms.TableLayoutPanel tableLayoutPanelBrush2;
         private System.Windows.Forms.Label labelFile2;
         private System.Windows.Forms.TextBox textBoxCrush2;
         private System.Windows.Forms.Button buttonBrowseFile2;
-        private System.Windows.Forms.TableLayoutPanel tableLayoutPanelDatabase1;
+        private System.Windows.Forms.TableLayoutPanel tableLayoutPanelBrush1;
         private System.Windows.Forms.Label labelFile1;
         private System.Windows.Forms.TextBox textBoxBrush1;
         private System.Windows.Forms.Button buttonFileBrowse1;
@@ -640,14 +607,10 @@
         private System.Windows.Forms.MenuStrip menuStrip1;
         private System.Windows.Forms.ToolStripMenuItem fileToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem saveInfoAsRTFToolStripMenuItem;
-        private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
         private System.Windows.Forms.ToolStripMenuItem quitToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem helpToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem overviewToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem aboutToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem showToolHierarchyToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem database1ToolStripMenuItem1;
-        private System.Windows.Forms.ToolStripMenuItem database2ToolStripMenuItem;
         private System.Windows.Forms.ContextMenuStrip contextMenuStrip1;
         private System.Windows.Forms.ToolStripMenuItem cutToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem copyToolStripMenuItem;

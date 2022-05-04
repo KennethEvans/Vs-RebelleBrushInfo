@@ -11,7 +11,8 @@ namespace RebelleBrushInfo {
 
     public class BrushParam : IComparable<BrushParam> {
         public static readonly String NL = Environment.NewLine;
-        public static readonly char LineBreak = '\u00d0';
+        //public static readonly char Delim = '\u00d0';
+        public static readonly char Delim = '\0';
         public int Level { get; }
         public string Name { get; }
         public string Text { get; }
@@ -296,7 +297,7 @@ namespace RebelleBrushInfo {
                 case ParamType.IMAGE:
                     //value = "<Image: Hash= " + getHashForString(Text) + ">";
                     //value = generateRtfImage(Text);
-                    value = LineBreak + Text + LineBreak;
+                    value = Delim + Text + Delim;
                     break;
                 case ParamType.TEXT:
                     value = Text;
