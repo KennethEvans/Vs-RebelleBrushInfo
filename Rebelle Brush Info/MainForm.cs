@@ -173,7 +173,7 @@ namespace RebelleBrushInfo {
             appendInfo("2: ");
             printHeading(FileType.Brush2);
 
-            // Make a SortedDictionary holding all the items form both brushes.
+            // Make a SortedDictionary holding all the items from both brushes.
             SortedDictionary<string, CompareItem> items =
                 new SortedDictionary<string, CompareItem>();
             foreach (BrushParam param in paramsList1) {
@@ -185,11 +185,7 @@ namespace RebelleBrushInfo {
             string info = getItemInfo(items, all);
 
             // Parse the info to get the images so they can be inserted
-            // Append the params.info()
-            foreach (BrushParam param in paramsList1) {
-                // Parse the info to get the images so they can be inserted
-                appendInfoWithImages(info);
-            }
+            appendInfoWithImages(info);
         }
 
         /// <summary>
@@ -233,12 +229,14 @@ namespace RebelleBrushInfo {
             string info1, info2, note1 = "  1 ", note2 = "  2 ";
             int pos1, pos2;
             int level;
+            ParamType type;
             CompareItem item;
             SortedDictionary<string, CompareItem>.KeyCollection keys = items.Keys;
             foreach (string key in keys) {
                 bool res = items.TryGetValue(key, out item);
                 if (res) {
                     level = (item.Param1 != null) ? item.Param1.Level : item.Param2.Level;
+                    type = (item.Param1 != null) ? item.Param1.Type : item.Param2.Type;
                     info1 = item.getInfo(1, prefix: note1, doChildren: false);
                     info2 = item.getInfo(2, prefix: note2, doChildren: false);
                     if (all) {
@@ -262,6 +260,9 @@ namespace RebelleBrushInfo {
                             info += BrushParam.indented(key, level);
                             info += info1;
                             info += info2;
+                        } else if (type == ParamType.JOBJECT) {
+                            // info1 and info2 will be equal in this case
+                            info += BrushParam.indented(key, level);
                         }
                     }
                     if (item.Children.Count > 0) {
@@ -416,11 +417,11 @@ namespace RebelleBrushInfo {
                 // The text starts with an image
                 evenodd = 0;
             }
-                string[] tokens = text.Split(BrushParam.Delim);
-                Font oldFont = textBoxInfo.SelectionFont;
-                for (int i = 0; i < tokens.Length; i++) {
-                    string token = tokens[i];
-                    if (i % 2 == evenodd) {
+            string[] tokens = text.Split(BrushParam.Delim);
+            Font oldFont = textBoxInfo.SelectionFont;
+            for (int i = 0; i < tokens.Length; i++) {
+                string token = tokens[i];
+                if (i % 2 == evenodd) {
                     // Token is base64 image
                     appendInfo(NL + "    ");
                     try {
@@ -435,12 +436,12 @@ namespace RebelleBrushInfo {
                         appendInfo("    " + ex.Message);
                     }
                     textBoxInfo.SelectionFont = oldFont;
-                        appendInfo("    ");
-                        //appendInfo("<Image>");
-                    } else {
-                        appendInfo(token);
-                    }
+                    appendInfo("    ");
+                    //appendInfo("<Image>");
+                } else {
+                    appendInfo(token);
                 }
+            }
         }
 
         //private void appendImages(BrushParam param) {
@@ -510,7 +511,7 @@ namespace RebelleBrushInfo {
         }
 
         private void OnCompareClick(object sender, EventArgs e) {
-            compare();
+            compare(false);
             // Check for errors
             if (checkForErrors()) {
                 InsertAtInfoTop("!!! There are errors" + NL + NL);
@@ -622,6 +623,12 @@ namespace RebelleBrushInfo {
 
         private void OnSelectAllClick(object sender, EventArgs e) {
             textBoxInfo.SelectAll();
+        }
+
+        private void OnKeyDownPressed(object sender, KeyEventArgs e) {
+            if (e.Control && e.KeyCode == Keys.F) {
+                OnFindClick(sender, e);
+            }
         }
     }
 
