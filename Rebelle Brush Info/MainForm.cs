@@ -546,36 +546,12 @@ namespace RebelleBrushInfo {
             dlg.ShowDialog();
         }
 
-        private void OnBrowseDatabase1Click(object sender, EventArgs e) {
+        private void OnBrowseBrush1Click(object sender, EventArgs e) {
             getFileName(FileType.Brush1);
         }
 
-        private void OnBrowseDatabase2Click(object sender, EventArgs e) {
-            getFileName(FileType.Brush2);
-        }
-
-        private void OnBrowseBrush1Click(object sender, EventArgs e) {
-            string databaseName = textBoxBrush1.Text;
-            if (databaseName == null || databaseName.Length == 0) {
-                Utils.Utils.errMsg("Brush 1 is not defined");
-                return;
-            }
-            if (!File.Exists(databaseName)) {
-                Utils.Utils.errMsg("Brush 1 does not exist");
-                return;
-            }
-        }
-
         private void OnBrowseBrush2Click(object sender, EventArgs e) {
-            string databaseName = textBoxCrush2.Text;
-            if (databaseName == null || databaseName.Length == 0) {
-                Utils.Utils.errMsg("Brush 2 is not defined");
-                return;
-            }
-            if (!File.Exists(databaseName)) {
-                Utils.Utils.errMsg("Brush 2 does not exist");
-                return;
-            }
+            getFileName(FileType.Brush2);
         }
 
         private void OnSaveRtfClick(object sender, EventArgs e) {
