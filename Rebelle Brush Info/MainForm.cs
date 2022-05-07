@@ -18,7 +18,7 @@ namespace RebelleBrushInfo {
         enum FileType { Brush1, Brush2 };
         public static readonly int PROCESS_TIMEOUT = 5000; // ms
         public static readonly String NL = Environment.NewLine;
-        private static readonly int imageSize = 256;
+        public static int ImageWidth { get; set; } = 256;
         private static ScrolledHTMLDialog overviewDlg;
         //private static ScrolledRichTextDialog textDlg;
         private static FindDialog findDlg;
@@ -198,9 +198,18 @@ namespace RebelleBrushInfo {
             Bitmap bm;
             using (MemoryStream ms = new MemoryStream(bytes)) {
                 bm = (Bitmap)Image.FromStream(ms);
-                bm = new Bitmap(bm, new Size(imageSize, imageSize));
+                bm = new Bitmap(bm, new Size(ImageWidth, ImageWidth));
             }
             return Utils.RTFUtils.imageRtf(textBoxInfo, bm);
+        }
+
+        public static string convertImageToBase64(Bitmap bm) {
+            string base64 = null;
+            using (var ms = new MemoryStream()) {
+                    bm.Save(ms, System.Drawing.Imaging.ImageFormat.Jpeg);
+                    base64 = Convert.ToBase64String(ms.GetBuffer()); //Get Base64
+            }
+            return base64;
         }
 
         /// <summary>
@@ -430,8 +439,8 @@ namespace RebelleBrushInfo {
                     // Token is base64 image
                     appendInfo(NL + "    ");
                     try {
-                        string base64 = generateRtfImage(token);
-                        Utils.RTFUtils.insertRtb(textBoxInfo, base64);
+                        string rtbImageString = generateRtfImage(token);
+                        Utils.RTFUtils.insertRtb(textBoxInfo, rtbImageString);
                     } catch (Exception ex) {
                         string msg = "Error parsing image";
                         //Utils.Utils.excMsg(msg, ex);

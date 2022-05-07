@@ -82,18 +82,26 @@ namespace RebelleBrushInfo {
             if (Children != null) {
                 Children.Sort();
             } else if (Type == ParamType.CURVE) {
+                // Add spacing in front in front of the multiline text
                 string newValue = "";
-                using (StringReader sr = new StringReader(Value)) {
-                    string line;
-                    while ((line = sr.ReadLine()) != null) {
-                        newValue += "            " + line + NL;
-                    }
-                }
+                //using (StringReader sr = new StringReader(Value)) {
+                //    string line;
+                //    while ((line = sr.ReadLine()) != null) {
+                //        newValue += "            " + line + NL;
+                //    }
+                //}
+                newValue = RebelleCurve.formatCurve("    ", Value);
                 // Remove last NL
                 if (newValue.EndsWith(NL)) {
                     newValue = newValue.Substring(0, newValue.Length - NL.Length);
                 }
-                Value = NL + newValue;
+
+                // Create an image
+                RebelleCurve rebelleCurve = RebelleCurve.getRebelleCurve(Value);
+                Bitmap bm = RebelleCurve.getCurveImage(rebelleCurve);
+                string base64 = MainForm.convertImageToBase64(bm);
+
+                Value = NL + newValue + Delim + base64 + Delim;
             }
         }
 
@@ -114,7 +122,7 @@ namespace RebelleBrushInfo {
             }
             if (Chunk.Equals("CHILD")) {
                 if (Value.StartsWith("{")) {
-                    if (Name.EndsWith("curve")) {
+                    if (Name.Contains("_curve")) {
                         return ParamType.CURVE;
                     }
                     return ParamType.JOBJECT;
@@ -327,6 +335,8 @@ namespace RebelleBrushInfo {
                     value = Delim + Value + Delim;
                     break;
                 case ParamType.TEXT:
+                    value = Value;
+                    break;
                 case ParamType.CURVE:
                     value = Value;
                     break;
