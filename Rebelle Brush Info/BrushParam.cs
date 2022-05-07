@@ -7,7 +7,7 @@ using System.Text;
 using System.Windows.Forms;
 
 namespace RebelleBrushInfo {
-    public enum ParamType { UNKNOWN, TEXT, JOBJECT, JARRAY, IMAGE }
+    public enum ParamType { UNKNOWN, TEXT, JOBJECT, JARRAY, IMAGE, CURVE }
 
     public class BrushParam : IComparable<BrushParam> {
         public static readonly String NL = Environment.NewLine;
@@ -15,20 +15,20 @@ namespace RebelleBrushInfo {
         public static readonly char Delim = '\0';
         public int Level { get; }
         public string Name { get; }
-        public string Text { get; }
+        public string Value { get; }
         public string Chunk { get; }
         public ParamType Type { get; }
         public List<BrushParam> Children { get; }
 
-        public BrushParam(int level, string chunk, string name, string text) {
+        public BrushParam(int level, string chunk, string name, string value) {
             Level = level;
             Chunk = chunk;
             Name = name;
-            Text = text.Trim();
+            Value = value.Trim();
             Type = getType();
             if (Type == ParamType.JOBJECT) {
                 Children = new List<BrushParam>();
-                JObject jObject = JObject.Parse(Text);
+                JObject jObject = JObject.Parse(Value);
                 if (jObject == null) {
                     // TO DO
                 } else {
@@ -50,7 +50,7 @@ namespace RebelleBrushInfo {
                 }
             } else if (Type == ParamType.JARRAY) {
                 Children = new List<BrushParam>();
-                JArray jArray = JArray.Parse(Text);
+                JArray jArray = JArray.Parse(Value);
                 if (jArray == null) {
                     // TO DO
                 } else {
@@ -81,6 +81,19 @@ namespace RebelleBrushInfo {
             // Sort the Children
             if (Children != null) {
                 Children.Sort();
+            } else if (Type == ParamType.CURVE) {
+                string newValue = "";
+                using (StringReader sr = new StringReader(Value)) {
+                    string line;
+                    while ((line = sr.ReadLine()) != null) {
+                        newValue += "            " + line + NL;
+                    }
+                }
+                // Remove last NL
+                if (newValue.EndsWith(NL)) {
+                    newValue = newValue.Substring(0, newValue.Length - NL.Length);
+                }
+                Value = NL + newValue;
             }
         }
 
@@ -89,20 +102,23 @@ namespace RebelleBrushInfo {
                 return ParamType.TEXT;
             }
             if (Chunk.Equals("PNG-zTXt")) {
-                if (Text.StartsWith("{")) {
+                if (Value.StartsWith("{")) {
                     return ParamType.JOBJECT;
-                } else if (Text.Length <= 128) {
+                } else if (Value.Length <= 128) {
                     // Assume a Base64 image is > this many characters
-                    // Short text is the asset_id
+                    // Short value is the asset_id
                     return ParamType.TEXT;
                 } else {
                     return ParamType.IMAGE;
                 }
             }
             if (Chunk.Equals("CHILD")) {
-                if (Text.StartsWith("{")) {
+                if (Value.StartsWith("{")) {
+                    if (Name.EndsWith("curve")) {
+                        return ParamType.CURVE;
+                    }
                     return ParamType.JOBJECT;
-                } else if (Text.StartsWith("[")) {
+                } else if (Value.StartsWith("[")) {
                     return ParamType.JARRAY;
                 } else {
                     return ParamType.TEXT;
@@ -111,10 +127,21 @@ namespace RebelleBrushInfo {
             return ParamType.UNKNOWN;
         }
 
+        /// <summary>
+        /// Compare compares the names of the two BrushParams.
+        /// </summary>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        /// <returns></returns>
         public int Compare(BrushParam x, BrushParam y) {
             return ((BrushParam)x).Name.CompareTo(y.Name);
         }
 
+        /// <summary>
+        /// CompareTo compares the names of this and other.
+        /// </summary>
+        /// <param name="other"></param>
+        /// <returns></returns>
         public int CompareTo(BrushParam other) {
             return (this.Name.CompareTo(((BrushParam)other).Name));
         }
@@ -129,7 +156,7 @@ namespace RebelleBrushInfo {
             if (!this.Name.Equals(param.Name)) {
                 return false;
             }
-            if (!this.Text.Equals(param.Text)) {
+            if (!this.Value.Equals(param.Value)) {
                 return false;
             }
             if (this.Type != param.Type) {
@@ -166,17 +193,17 @@ namespace RebelleBrushInfo {
         /// Returns a string that is indented like BrushParam.info is. A NL is
         /// added;
         /// </summary>
-        /// <param name="text"></param>
+        /// <param name="value"></param>
         /// <param name="level">The level to use for indentation. Get from a
         /// BrushParam</param>
         /// <param name="tab">The tab string to use, usually "    "</param>
         /// <returns>The indented string.</returns>
-        public static string indented(string text, int level, string tab = "    ") {
+        public static string indented(string value, int level, string tab = "    ") {
             string info = "";
             for (int i = 1; i < level; i++) {
                 info += tab;
             }
-            info += text + NL;
+            info += value + NL;
             return info;
         }
 
@@ -286,9 +313,9 @@ namespace RebelleBrushInfo {
                     value = "Unknown";
                     break;
                 case ParamType.JOBJECT:
-                    JObject jObject = JObject.Parse(Text);
+                    JObject jObject = JObject.Parse(Value);
                     if (jObject == null) {
-                        value = Text + " (Error parsing)";
+                        value = Value + " (Error parsing)";
                     } else {
                         //value = jObject.Count + " children" + NL;
                         value = "";
@@ -297,10 +324,11 @@ namespace RebelleBrushInfo {
                 case ParamType.IMAGE:
                     //value = "<Image: Hash= " + getHashForString(Text) + ">";
                     //value = generateRtfImage(Text);
-                    value = Delim + Text + Delim;
+                    value = Delim + Value + Delim;
                     break;
                 case ParamType.TEXT:
-                    value = Text;
+                case ParamType.CURVE:
+                    value = Value;
                     break;
             }
             info.Append(value).Append(NL);

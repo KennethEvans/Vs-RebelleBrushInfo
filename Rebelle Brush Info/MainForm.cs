@@ -226,7 +226,7 @@ namespace RebelleBrushInfo {
         private string getItemInfo(SortedDictionary<string, CompareItem> items,
             bool all) {
             string info = "";
-            string info1, info2, note1 = "  1 ", note2 = "  2 ";
+            string info1, info2, indxStr1 = "  1 ", indxStr2 = "  2 ";
             int pos1, pos2;
             int level;
             ParamType type;
@@ -237,22 +237,22 @@ namespace RebelleBrushInfo {
                 if (res) {
                     level = (item.Param1 != null) ? item.Param1.Level : item.Param2.Level;
                     type = (item.Param1 != null) ? item.Param1.Type : item.Param2.Type;
-                    info1 = item.getInfo(1, prefix: note1, doChildren: false);
-                    info2 = item.getInfo(2, prefix: note2, doChildren: false);
+                    info1 = item.getInfo(1, prefix: indxStr1, doChildren: false);
+                    info2 = item.getInfo(2, prefix: indxStr2, doChildren: false);
                     if (all) {
                         info += BrushParam.indented(key, level);
                         info += info1;
                         info += info2;
                     } else {
-                        int index1 = info1.IndexOf(note1);
+                        int index1 = info1.IndexOf(indxStr1);
                         if (index1 != -1) {
-                            pos1 = index1 + note1.Length;
+                            pos1 = index1 + indxStr1.Length;
                         } else {
                             pos1 = 0;
                         }
-                        int index2 = info2.IndexOf(note2);
+                        int index2 = info2.IndexOf(indxStr2);
                         if (index2 != -1) {
-                            pos2 = index2 + note2.Length;
+                            pos2 = index2 + indxStr2.Length;
                         } else {
                             pos2 = 0;
                         }
@@ -262,7 +262,12 @@ namespace RebelleBrushInfo {
                             info += info2;
                         } else if (type == ParamType.JOBJECT) {
                             // info1 and info2 will be equal in this case
-                            info += BrushParam.indented(key, level);
+                            // Note lowercase equals, which is a BrushParam method
+                            bool match = item.Param1 != null && item.Param2 != null &&
+                                item.Param1.equals(item.Param2);
+                            if (!match) {
+                                info += BrushParam.indented(key, level);
+                            }
                         }
                     }
                     if (item.Children.Count > 0) {
