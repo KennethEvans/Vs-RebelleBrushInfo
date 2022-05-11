@@ -7,6 +7,7 @@ using MetadataExtractor;
 using RebelleUtils;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Text;
@@ -150,6 +151,67 @@ namespace RebelleBrushInfo {
         }
 
         /// <summary>
+        /// Compares the Parameters and ParametersEx to the defaults.
+        /// </summary>
+        /// <param name="all">Whether to show all items or just differences.</param>
+        private void compareToDefault(FileType type, Boolean all = false) {
+            List<BrushParam> paramsList;
+            // Process brush
+            if (type == FileType.Brush1) {
+                processBrush(FileType.Brush1, false);
+                paramsList = paramsList1;
+                if (paramsList1.Count == 0) {
+                    Utils.Utils.errMsg("Did not get params for Brush 1");
+                    return;
+                }
+                paramsList = paramsList1;
+            } else {
+                // Process brush 2
+                processBrush(FileType.Brush2, false);
+                if (paramsList2.Count == 0) {
+                    Utils.Utils.errMsg("Did not get params for Brush 2");
+                    return;
+                }
+                paramsList = paramsList2;
+            }
+
+            // Write heading to textBoxInfo
+            printHeading(type);
+            appendInfo("1: Parameters" + NL);
+            appendInfo("2: DefaultParameters" + NL);
+            appendInfo(NL);
+
+            // Make a SortedDictionary holding all the items from both brushes.
+            SortedDictionary<string, CompareItem> items =
+                new SortedDictionary<string, CompareItem>();
+            foreach (BrushParam param in paramsList) {
+                if (param.Name.StartsWith("Parameters")) {
+                    BrushParam.addToDictionary(1, param, items);
+                }
+            }
+            BrushParam clone;
+            bool found = false;
+            foreach (BrushParam param in paramsList) {
+                if (param.Name.StartsWith("Default")) {
+                    found = true;
+                    clone = param.clone();
+                    clone.Name = param.Name.Substring("Default".Length);
+                    BrushParam.addToDictionary(2, clone, items);
+                }
+            }
+
+            if (!found) {
+                appendInfo("There are no default parameters in this brush" + NL);
+                return;
+            }
+
+            string info = getItemInfo(items, all);
+
+            // Parse the info to get the images so they can be inserted
+            appendInfoWithImages(info);
+        }
+
+        /// <summary>
         /// Compares the two files and displays the output.
         /// </summary>
         /// <param name="all">Whether to show all items or just differences.</param>
@@ -206,8 +268,8 @@ namespace RebelleBrushInfo {
         public static string convertImageToBase64(Bitmap bm) {
             string base64 = null;
             using (var ms = new MemoryStream()) {
-                    bm.Save(ms, System.Drawing.Imaging.ImageFormat.Jpeg);
-                    base64 = Convert.ToBase64String(ms.GetBuffer()); //Get Base64
+                bm.Save(ms, System.Drawing.Imaging.ImageFormat.Jpeg);
+                base64 = Convert.ToBase64String(ms.GetBuffer()); //Get Base64
             }
             return base64;
         }
@@ -540,6 +602,22 @@ namespace RebelleBrushInfo {
             }
         }
 
+        private void OnCompareDefaultsClick(object sender, EventArgs e) {
+            if (sender.Equals(compare1DefaultsToolStripMenuItem)) {
+                compareToDefault(FileType.Brush1, false);
+            } else if (sender.Equals(compare1DefaultsAllToolStripMenuItem)) {
+                compareToDefault(FileType.Brush1, true);
+            } else if (sender.Equals(compare2DefaultsToolStripMenuItem)) {
+                compareToDefault(FileType.Brush2, false);
+            } else if (sender.Equals(compare2DefaultsAllToolStripMenuItem)) {
+                compareToDefault(FileType.Brush2, true);
+            }
+            // Check for errors
+            if (checkForErrors()) {
+                InsertAtInfoTop("!!! There are errors" + NL + NL);
+            }
+        }
+
         private void OnQuitClick(object sender, EventArgs e) {
             Close();
         }
@@ -553,6 +631,14 @@ namespace RebelleBrushInfo {
                 overviewDlg.Show();
             } else {
                 overviewDlg.Visible = true;
+            }
+        }
+
+        private void OnOverviewOnlineClick(object sender, EventArgs e) {
+            try {
+                Process.Start("https://kenevans.net/opensource/RebelleBrushInfo/Help/Overview.html");
+            } catch (Exception ex) {
+                Utils.Utils.excMsg("Failed to start browser", ex);
             }
         }
 

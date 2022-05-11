@@ -30,8 +30,18 @@
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.saveInfoAsRTFToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.quitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.brush1ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.process1ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.compare1DefaultsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.compare1DefaultsAllToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.brush2ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.process2ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.compare2DefaultsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.compare2DefaultsAllToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.overviewToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.helpOnlineToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.groupBoxBrush1 = new System.Windows.Forms.GroupBox();
             this.tableLayoutPanelGroupBrush1 = new System.Windows.Forms.TableLayoutPanel();
@@ -107,10 +117,11 @@
             this.menuStrip1.ImageScalingSize = new System.Drawing.Size(40, 40);
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.fileToolStripMenuItem,
+            this.toolsToolStripMenuItem,
             this.helpToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(1588, 49);
+            this.menuStrip1.Size = new System.Drawing.Size(1588, 52);
             this.menuStrip1.TabIndex = 0;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -120,7 +131,7 @@
             this.saveInfoAsRTFToolStripMenuItem,
             this.quitToolStripMenuItem});
             this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
-            this.fileToolStripMenuItem.Size = new System.Drawing.Size(87, 45);
+            this.fileToolStripMenuItem.Size = new System.Drawing.Size(87, 48);
             this.fileToolStripMenuItem.Text = "File";
             // 
             // saveInfoAsRTFToolStripMenuItem
@@ -137,26 +148,105 @@
             this.quitToolStripMenuItem.Text = "Quit";
             this.quitToolStripMenuItem.Click += new System.EventHandler(this.OnQuitClick);
             // 
+            // toolsToolStripMenuItem
+            // 
+            this.toolsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.brush1ToolStripMenuItem,
+            this.brush2ToolStripMenuItem});
+            this.toolsToolStripMenuItem.Name = "toolsToolStripMenuItem";
+            this.toolsToolStripMenuItem.Size = new System.Drawing.Size(111, 48);
+            this.toolsToolStripMenuItem.Text = "Tools";
+            // 
+            // brush1ToolStripMenuItem
+            // 
+            this.brush1ToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.process1ToolStripMenuItem,
+            this.compare1DefaultsToolStripMenuItem,
+            this.compare1DefaultsAllToolStripMenuItem});
+            this.brush1ToolStripMenuItem.Name = "brush1ToolStripMenuItem";
+            this.brush1ToolStripMenuItem.Size = new System.Drawing.Size(282, 54);
+            this.brush1ToolStripMenuItem.Text = "Brush 1";
+            // 
+            // process1ToolStripMenuItem
+            // 
+            this.process1ToolStripMenuItem.Name = "process1ToolStripMenuItem";
+            this.process1ToolStripMenuItem.Size = new System.Drawing.Size(487, 54);
+            this.process1ToolStripMenuItem.Text = "Process";
+            this.process1ToolStripMenuItem.Click += new System.EventHandler(this.OnProcess1Click);
+            // 
+            // compare1DefaultsToolStripMenuItem
+            // 
+            this.compare1DefaultsToolStripMenuItem.Name = "compare1DefaultsToolStripMenuItem";
+            this.compare1DefaultsToolStripMenuItem.Size = new System.Drawing.Size(487, 54);
+            this.compare1DefaultsToolStripMenuItem.Text = "Compare to Defaults ≠";
+            this.compare1DefaultsToolStripMenuItem.Click += new System.EventHandler(this.OnCompareDefaultsClick);
+            // 
+            // compare1DefaultsAllToolStripMenuItem
+            // 
+            this.compare1DefaultsAllToolStripMenuItem.Name = "compare1DefaultsAllToolStripMenuItem";
+            this.compare1DefaultsAllToolStripMenuItem.Size = new System.Drawing.Size(487, 54);
+            this.compare1DefaultsAllToolStripMenuItem.Text = "Compare to Defaults *";
+            this.compare1DefaultsAllToolStripMenuItem.Click += new System.EventHandler(this.OnCompareDefaultsClick);
+            // 
+            // brush2ToolStripMenuItem
+            // 
+            this.brush2ToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.process2ToolStripMenuItem,
+            this.compare2DefaultsToolStripMenuItem,
+            this.compare2DefaultsAllToolStripMenuItem});
+            this.brush2ToolStripMenuItem.Name = "brush2ToolStripMenuItem";
+            this.brush2ToolStripMenuItem.Size = new System.Drawing.Size(282, 54);
+            this.brush2ToolStripMenuItem.Text = "Brush 2";
+            // 
+            // process2ToolStripMenuItem
+            // 
+            this.process2ToolStripMenuItem.Name = "process2ToolStripMenuItem";
+            this.process2ToolStripMenuItem.Size = new System.Drawing.Size(487, 54);
+            this.process2ToolStripMenuItem.Text = "Process";
+            this.process2ToolStripMenuItem.Click += new System.EventHandler(this.OnProcess2Click);
+            // 
+            // compare2DefaultsToolStripMenuItem
+            // 
+            this.compare2DefaultsToolStripMenuItem.Name = "compare2DefaultsToolStripMenuItem";
+            this.compare2DefaultsToolStripMenuItem.Size = new System.Drawing.Size(487, 54);
+            this.compare2DefaultsToolStripMenuItem.Text = "Compare to Defaults ≠";
+            this.compare2DefaultsToolStripMenuItem.Click += new System.EventHandler(this.OnCompareDefaultsClick);
+            // 
+            // compare2DefaultsAllToolStripMenuItem
+            // 
+            this.compare2DefaultsAllToolStripMenuItem.Name = "compare2DefaultsAllToolStripMenuItem";
+            this.compare2DefaultsAllToolStripMenuItem.Size = new System.Drawing.Size(487, 54);
+            this.compare2DefaultsAllToolStripMenuItem.Text = "Compare to Defaults *";
+            this.compare2DefaultsAllToolStripMenuItem.Click += new System.EventHandler(this.OnCompareDefaultsClick);
+            // 
             // helpToolStripMenuItem
             // 
             this.helpToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.overviewToolStripMenuItem,
+            this.helpOnlineToolStripMenuItem,
             this.aboutToolStripMenuItem});
             this.helpToolStripMenuItem.Name = "helpToolStripMenuItem";
-            this.helpToolStripMenuItem.Size = new System.Drawing.Size(104, 45);
+            this.helpToolStripMenuItem.Size = new System.Drawing.Size(104, 48);
             this.helpToolStripMenuItem.Text = "Help";
             // 
             // overviewToolStripMenuItem
             // 
             this.overviewToolStripMenuItem.Name = "overviewToolStripMenuItem";
-            this.overviewToolStripMenuItem.Size = new System.Drawing.Size(327, 54);
+            this.overviewToolStripMenuItem.Size = new System.Drawing.Size(448, 54);
             this.overviewToolStripMenuItem.Text = "Overview...";
             this.overviewToolStripMenuItem.Click += new System.EventHandler(this.OnOverviewClick);
+            // 
+            // helpOnlineToolStripMenuItem
+            // 
+            this.helpOnlineToolStripMenuItem.Name = "helpOnlineToolStripMenuItem";
+            this.helpOnlineToolStripMenuItem.Size = new System.Drawing.Size(448, 54);
+            this.helpOnlineToolStripMenuItem.Text = "Overview Online...";
+            this.helpOnlineToolStripMenuItem.Click += new System.EventHandler(this.OnOverviewOnlineClick);
             // 
             // aboutToolStripMenuItem
             // 
             this.aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
-            this.aboutToolStripMenuItem.Size = new System.Drawing.Size(327, 54);
+            this.aboutToolStripMenuItem.Size = new System.Drawing.Size(448, 54);
             this.aboutToolStripMenuItem.Text = "About...";
             this.aboutToolStripMenuItem.Click += new System.EventHandler(this.OnAboutClick);
             // 
@@ -167,7 +257,7 @@
             this.groupBoxBrush1.BackColor = System.Drawing.SystemColors.Control;
             this.groupBoxBrush1.Controls.Add(this.tableLayoutPanelGroupBrush1);
             this.groupBoxBrush1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.groupBoxBrush1.Location = new System.Drawing.Point(5, 59);
+            this.groupBoxBrush1.Location = new System.Drawing.Point(5, 62);
             this.groupBoxBrush1.Margin = new System.Windows.Forms.Padding(5, 10, 5, 10);
             this.groupBoxBrush1.Name = "groupBoxBrush1";
             this.groupBoxBrush1.Padding = new System.Windows.Forms.Padding(10, 2, 3, 2);
@@ -275,7 +365,7 @@
             this.groupBoxBrush2.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.groupBoxBrush2.Controls.Add(this.tableLayoutPanelGroupBrush2);
             this.groupBoxBrush2.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.groupBoxBrush2.Location = new System.Drawing.Point(5, 170);
+            this.groupBoxBrush2.Location = new System.Drawing.Point(5, 173);
             this.groupBoxBrush2.Margin = new System.Windows.Forms.Padding(5, 10, 5, 10);
             this.groupBoxBrush2.Name = "groupBoxBrush2";
             this.groupBoxBrush2.Padding = new System.Windows.Forms.Padding(10, 2, 3, 2);
@@ -378,10 +468,10 @@
             // 
             this.textBoxInfo.ContextMenuStrip = this.contextMenuStrip1;
             this.textBoxInfo.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.textBoxInfo.Location = new System.Drawing.Point(3, 273);
+            this.textBoxInfo.Location = new System.Drawing.Point(3, 276);
             this.textBoxInfo.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.textBoxInfo.Name = "textBoxInfo";
-            this.textBoxInfo.Size = new System.Drawing.Size(1582, 937);
+            this.textBoxInfo.Size = new System.Drawing.Size(1582, 934);
             this.textBoxInfo.TabIndex = 3;
             this.textBoxInfo.Text = "";
             // 
@@ -623,6 +713,16 @@
         private System.Windows.Forms.ToolStripMenuItem saveAsRTFToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem findToolStripMenuItem;
         private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.ToolStripMenuItem toolsToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem brush1ToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem process1ToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem compare1DefaultsToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem compare1DefaultsAllToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem brush2ToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem process2ToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem compare2DefaultsToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem compare2DefaultsAllToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem helpOnlineToolStripMenuItem;
     }
 }
 

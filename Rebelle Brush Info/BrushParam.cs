@@ -1,10 +1,10 @@
-﻿using Newtonsoft.Json.Linq;
+﻿//#define USE_HASH_FOR_IMAGE
+
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
-using System.IO;
 using System.Text;
-using System.Windows.Forms;
 
 namespace RebelleBrushInfo {
     public enum ParamType { UNKNOWN, TEXT, JOBJECT, JARRAY, IMAGE, CURVE }
@@ -13,12 +13,16 @@ namespace RebelleBrushInfo {
         public static readonly String NL = Environment.NewLine;
         //public static readonly char Delim = '\u00d0';
         public static readonly char Delim = '\0';
-        public int Level { get; }
-        public string Name { get; }
-        public string Value { get; }
-        public string Chunk { get; }
-        public ParamType Type { get; }
-        public List<BrushParam> Children { get; }
+        public int Level { get; set; }
+        public string Name { get; set; }
+        public string Value { get; set; }
+        public string Chunk { get; set; }
+        public ParamType Type { get; set; }
+        public List<BrushParam> Children { get; set; }
+
+        public BrushParam() {
+
+        }
 
         public BrushParam(int level, string chunk, string name, string value) {
             Level = level;
@@ -198,6 +202,27 @@ namespace RebelleBrushInfo {
         }
 
         /// <summary>
+        /// Creates a clone of this BrushParam
+        /// </summary>
+        /// <returns></returns>
+        public BrushParam clone() {
+            BrushParam param = new BrushParam();
+            param.Level = this.Level;
+            param.Name = this.Name;
+            param.Value = this.Value;
+            param.Chunk = this.Chunk;
+            param.Type = this.Type;
+            param.Type = this.Type;
+            if (this.Children != null) {
+                param.Children = new List<BrushParam>();
+                foreach (BrushParam param0 in this.Children) {
+                    param.Children.Add(param0.clone());
+                }
+            }
+            return param;
+        }
+
+        /// <summary>
         /// Returns a string that is indented like BrushParam.info is. A NL is
         /// added;
         /// </summary>
@@ -330,9 +355,11 @@ namespace RebelleBrushInfo {
                     }
                     break;
                 case ParamType.IMAGE:
-                    //value = "<Image: Hash= " + getHashForString(Text) + ">";
-                    //value = generateRtfImage(Text);
+#if USE_HASH_FOR_IMAGE
+                    value = "<Image: Hash= " + getHashForString(Value) + ">";
+#else
                     value = Delim + Value + Delim;
+#endif
                     break;
                 case ParamType.TEXT:
                     value = Value;
