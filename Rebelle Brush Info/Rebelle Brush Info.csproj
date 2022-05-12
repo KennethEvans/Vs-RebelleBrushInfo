@@ -69,6 +69,7 @@
     </Compile>
     <Compile Include="CompareItem.cs" />
     <Compile Include="BrushParam.cs" />
+    <Compile Include="CubicSpline.cs" />
     <Compile Include="Metadata.cs" />
     <Compile Include="FindDialog.cs">
       <SubType>Form</SubType>

@@ -70,7 +70,7 @@ namespace RebelleBrushInfo {
             PointF[] controlPoints = new PointF[nPoints];
             for (int i = 0; i < nPoints; i++) {
                 float offset = 1;
-                if(curve.outputMax != curve.outputMin) {
+                if (curve.outputMax != curve.outputMin) {
                     offset = (float)(-curve.outputMin /
                         (curve.outputMax - curve.outputMin));
                 }
@@ -113,7 +113,7 @@ namespace RebelleBrushInfo {
                 // Control points
                 using (Brush brush = new SolidBrush(Color.FromArgb(123, 123, 123))) {
                     // Scale to default width of 256, Should be odd
-                    int width = (int)(2 * Math.Floor(19.0F / 2.0F * MainForm.ImageWidth /256.0F) + 1.0F);
+                    int width = (int)(2 * Math.Floor(19.0F / 2.0F * MainForm.ImageWidth / 256.0F) + 1.0F);
                     int off = (width - 1) / 2;
                     foreach (PointF point in controlPoints) {
                         g.FillEllipse(brush,
@@ -121,18 +121,7 @@ namespace RebelleBrushInfo {
                             width / scale, width / scale));
                     }
                 }
-                // Control point lines
-                using (Pen pen = new Pen(Color.FromArgb(140, 152, 252), 2 / scale)) {
-                    float xPrev = controlPoints[0].X;
-                    float yPrev = controlPoints[0].Y;
-                    for (int i = 1; i < controlPoints.Length; i++) {
-                        g.DrawLine(pen, xPrev, yPrev, controlPoints[i].X, controlPoints[i].Y);
-                        xPrev = controlPoints[i].X;
-                        yPrev = controlPoints[i].Y;
-                    }
-                }
                 // Curves
-                PointF[] ccp;
                 using (Pen pen = new Pen(Color.Black, 2 / scale)) {
                     if (nPoints == 1) {
                         PointF x0 = new PointF(0.0F, controlPoints[0].Y);
@@ -142,26 +131,26 @@ namespace RebelleBrushInfo {
                         // TODO: Need to interpolate this to 0 and 1
                         PointF y0 = new PointF(1.0F, controlPoints[0].Y);
                         g.DrawLine(pen, controlPoints[0], controlPoints[1]);
-                    } else if (nPoints == 3) {
-                        ccp = cubicBezier(controlPoints[0], controlPoints[1], controlPoints[2]);
-                        g.DrawBezier(pen, ccp[0], ccp[1], ccp[2], ccp[3]);
-                    } else if (nPoints > 3) {
-                        // First
-                        ccp = cubicBezier(controlPoints[0], controlPoints[1],
-                            midpoint(controlPoints[1], controlPoints[2]));
-                        g.DrawBezier(pen, ccp[0], ccp[1], ccp[2], ccp[3]);
-                        // Middle
-                        for (int i = 2; i < nPoints - 2; i++) {
-                            ccp = cubicBezier(midpoint(controlPoints[i - 1], controlPoints[i]),
-                                controlPoints[i],
-                                midpoint(controlPoints[i], controlPoints[i + 1]));
-                            g.DrawBezier(pen, ccp[0], ccp[1], ccp[2], ccp[3]);
+                    } else {
+                        // Use cubic spline
+                        float[] xSpline = new float[nPoints];
+                        float[] ySpline = new float[nPoints];
+                        for (int i = 0; i < nPoints; i++) {
+                            xSpline[i] = controlPoints[i].X;
+                            ySpline[i] = controlPoints[i].Y;
+
                         }
-                        // Last
-                        ccp = cubicBezier(midpoint(controlPoints[nPoints - 3], controlPoints[nPoints - 2]),
-                            controlPoints[nPoints - 2],
-                           controlPoints[nPoints - 1]);
-                        g.DrawBezier(pen, ccp[0], ccp[1], ccp[2], ccp[3]);
+                        float[] xFit, yFit;
+                        int nFitPoints = 25;
+                        CubicSpline.CubicSpline.FitParametric(xSpline, ySpline,
+                            nFitPoints, out xFit, out yFit);
+                        float xPrev = xFit[0];
+                        float yPrev = yFit[0];
+                        for (int i = 1; i < nFitPoints; i++) {
+                            g.DrawLine(pen, xPrev, yPrev, xFit[i], yFit[i]);
+                            xPrev = xFit[i];
+                            yPrev = yFit[i];
+                        }
                     }
                     // Add lines at left and right
                     if (nPoints >= 2) {
@@ -180,28 +169,6 @@ namespace RebelleBrushInfo {
             }
             //bm.Save(@"C:\Scratch\AAA\" + "RebelleCurveTest.png", ImageFormat.Png);
             return bm;
-        }
-
-        /// <summary>
-        /// Calculates the cubic Bezier points corresponding to a quadratic Bezier.
-        /// </summary>
-        /// <param name="qp0">Quadratic point.</param>
-        /// <param name="qp1">Quadratic point.</param>
-        /// <param name="qp2">Quadratic point.</param>
-        /// <returns>Cubic points as float {cp0, cp1, cp2, cp3}.</returns>
-        static PointF[] cubicBezier(PointF qp0, PointF qp1, PointF qp2) {
-            float fract = 2.0f / 3.0f;
-            PointF cp0 = qp0;
-            PointF cp1 = new PointF(qp0.X + fract * (qp1.X - qp0.X),
-                qp0.Y + fract * (qp1.Y - qp0.Y));
-            PointF cp2 = new PointF(qp2.X + fract * (qp1.X - qp2.X),
-                qp2.Y + fract * (qp1.Y - qp2.Y));
-            PointF cp3 = qp2;
-            return new PointF[] { cp0, cp1, cp2, cp3 };
-        }
-
-        static PointF midpoint(PointF p0, PointF p1) {
-            return new PointF(.5f * (p0.X + p1.X), .5f * (p0.Y + p1.Y));
         }
 
     }
