@@ -378,17 +378,21 @@ namespace RebelleBrushInfo {
             // Set initial directory
             switch (type) {
                 case FileType.Brush1:
-                    //dlg.Filter = "Krita Presets|*.kpp";
                     fileName = textBoxBrush1.Text;
                     break;
                 case FileType.Brush2:
-                    //dlg.Filter = "Krita Presets|*.kpp";
                     fileName = textBoxCrush2.Text;
                     break;
             }
             if (File.Exists(fileName)) {
                 dlg.FileName = fileName;
                 dlg.InitialDirectory = Path.GetDirectoryName(fileName);
+            } else {
+                //dlg.InitialDirectory = @"%LOCALAPPDATA%\Escape Motions";
+                string path = Path.GetDirectoryName(Environment.GetFolderPath(
+                    Environment.SpecialFolder.ApplicationData));
+                path = Path.Combine(path, @"Local\Escape Motions");
+                dlg.InitialDirectory = path;
             }
             if (dlg.ShowDialog() == System.Windows.Forms.DialogResult.OK) {
                 resetFileName(type, dlg.FileName);
