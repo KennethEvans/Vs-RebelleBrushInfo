@@ -15,8 +15,7 @@ namespace RebelleBrushInfo {
             // Add the HTML
             string appDir = System.IO.Path.GetDirectoryName(
                 System.Reflection.Assembly.GetExecutingAssembly().GetName().CodeBase);
-            webBrowser.Url = new Uri(System.IO.Path.Combine(appDir, @"Help\Overview.html"));
-
+            webView.Source = new Uri(System.IO.Path.Combine(appDir, @"Help\Overview.html"));
         }
 
         private void OnFormClosing(object sender, FormClosingEventArgs e) {
@@ -28,11 +27,11 @@ namespace RebelleBrushInfo {
         }
 
         private void OnButtonBackClick(object sender, EventArgs e) {
-            webBrowser.GoBack();
+            webView.GoBack();
         }
 
         private void OnButtonForwardClick(object sender, EventArgs e) {
-            webBrowser.GoForward();
+            webView.GoForward();
         }
 
         private void OnButtonCancelClick(object sender, EventArgs e) {

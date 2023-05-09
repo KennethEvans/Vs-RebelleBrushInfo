@@ -24,25 +24,16 @@
         /// </summary>
         private void InitializeComponent() {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ScrolledHTMLDialog));
-            this.webBrowser = new System.Windows.Forms.WebBrowser();
             this.flowLayoutPanelButtons1 = new System.Windows.Forms.FlowLayoutPanel();
             this.buttonBack = new System.Windows.Forms.Button();
             this.buttonForward = new System.Windows.Forms.Button();
             this.buttonCancel = new System.Windows.Forms.Button();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
+            this.webView = new Microsoft.Web.WebView2.WinForms.WebView2();
             this.flowLayoutPanelButtons1.SuspendLayout();
             this.tableLayoutPanel1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.webView)).BeginInit();
             this.SuspendLayout();
-            // 
-            // webBrowser
-            // 
-            this.webBrowser.AllowWebBrowserDrop = false;
-            this.webBrowser.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.webBrowser.Location = new System.Drawing.Point(3, 3);
-            this.webBrowser.MinimumSize = new System.Drawing.Size(20, 20);
-            this.webBrowser.Name = "webBrowser";
-            this.webBrowser.Size = new System.Drawing.Size(762, 837);
-            this.webBrowser.TabIndex = 1;
             // 
             // flowLayoutPanelButtons1
             // 
@@ -52,7 +43,7 @@
             this.flowLayoutPanelButtons1.Controls.Add(this.buttonBack);
             this.flowLayoutPanelButtons1.Controls.Add(this.buttonForward);
             this.flowLayoutPanelButtons1.Controls.Add(this.buttonCancel);
-            this.flowLayoutPanelButtons1.Location = new System.Drawing.Point(141, 849);
+            this.flowLayoutPanelButtons1.Location = new System.Drawing.Point(141, 829);
             this.flowLayoutPanelButtons1.Margin = new System.Windows.Forms.Padding(6);
             this.flowLayoutPanelButtons1.Name = "flowLayoutPanelButtons1";
             this.flowLayoutPanelButtons1.Size = new System.Drawing.Size(486, 57);
@@ -102,15 +93,28 @@
             this.tableLayoutPanel1.ColumnCount = 1;
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tableLayoutPanel1.Controls.Add(this.flowLayoutPanelButtons1, 0, 1);
-            this.tableLayoutPanel1.Controls.Add(this.webBrowser, 0, 0);
+            this.tableLayoutPanel1.Controls.Add(this.webView, 0, 0);
             this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanel1.Location = new System.Drawing.Point(0, 0);
             this.tableLayoutPanel1.Name = "tableLayoutPanel1";
-            this.tableLayoutPanel1.RowCount = 2;
+            this.tableLayoutPanel1.RowCount = 3;
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
             this.tableLayoutPanel1.Size = new System.Drawing.Size(768, 912);
             this.tableLayoutPanel1.TabIndex = 2;
+            // 
+            // webView
+            // 
+            this.webView.AllowExternalDrop = true;
+            this.webView.CreationProperties = null;
+            this.webView.DefaultBackgroundColor = System.Drawing.Color.White;
+            this.webView.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.webView.Location = new System.Drawing.Point(3, 3);
+            this.webView.Name = "webView";
+            this.webView.Size = new System.Drawing.Size(762, 817);
+            this.webView.TabIndex = 6;
+            this.webView.ZoomFactor = 1D;
             // 
             // ScrolledHTMLDialog
             // 
@@ -128,17 +132,18 @@
             this.flowLayoutPanelButtons1.PerformLayout();
             this.tableLayoutPanel1.ResumeLayout(false);
             this.tableLayoutPanel1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.webView)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
         }
 
         #endregion
-        private System.Windows.Forms.WebBrowser webBrowser;
         private System.Windows.Forms.FlowLayoutPanel flowLayoutPanelButtons1;
         private System.Windows.Forms.Button buttonBack;
         private System.Windows.Forms.Button buttonForward;
         private System.Windows.Forms.Button buttonCancel;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
+        private Microsoft.Web.WebView2.WinForms.WebView2 webView;
     }
 }

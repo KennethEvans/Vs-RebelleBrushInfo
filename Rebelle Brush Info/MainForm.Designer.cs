@@ -113,6 +113,7 @@
             // 
             // menuStrip1
             // 
+            this.menuStrip1.GripMargin = new System.Windows.Forms.Padding(2, 2, 0, 2);
             this.menuStrip1.ImageScalingSize = new System.Drawing.Size(40, 40);
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.fileToolStripMenuItem,
@@ -120,7 +121,7 @@
             this.helpToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(1588, 52);
+            this.menuStrip1.Size = new System.Drawing.Size(1588, 60);
             this.menuStrip1.TabIndex = 0;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -130,7 +131,7 @@
             this.saveInfoAsRTFToolStripMenuItem,
             this.quitToolStripMenuItem});
             this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
-            this.fileToolStripMenuItem.Size = new System.Drawing.Size(87, 48);
+            this.fileToolStripMenuItem.Size = new System.Drawing.Size(87, 50);
             this.fileToolStripMenuItem.Text = "File";
             // 
             // saveInfoAsRTFToolStripMenuItem
@@ -153,7 +154,7 @@
             this.brush1ToolStripMenuItem,
             this.brush2ToolStripMenuItem});
             this.toolsToolStripMenuItem.Name = "toolsToolStripMenuItem";
-            this.toolsToolStripMenuItem.Size = new System.Drawing.Size(111, 48);
+            this.toolsToolStripMenuItem.Size = new System.Drawing.Size(111, 50);
             this.toolsToolStripMenuItem.Text = "Tools";
             // 
             // brush1ToolStripMenuItem
@@ -225,7 +226,7 @@
             this.helpOnlineToolStripMenuItem,
             this.aboutToolStripMenuItem});
             this.helpToolStripMenuItem.Name = "helpToolStripMenuItem";
-            this.helpToolStripMenuItem.Size = new System.Drawing.Size(104, 48);
+            this.helpToolStripMenuItem.Size = new System.Drawing.Size(104, 50);
             this.helpToolStripMenuItem.Text = "Help";
             // 
             // overviewToolStripMenuItem
@@ -256,7 +257,7 @@
             this.groupBoxBrush1.BackColor = System.Drawing.SystemColors.Control;
             this.groupBoxBrush1.Controls.Add(this.tableLayoutPanelGroupBrush1);
             this.groupBoxBrush1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.groupBoxBrush1.Location = new System.Drawing.Point(5, 62);
+            this.groupBoxBrush1.Location = new System.Drawing.Point(5, 70);
             this.groupBoxBrush1.Margin = new System.Windows.Forms.Padding(5, 10, 5, 10);
             this.groupBoxBrush1.Name = "groupBoxBrush1";
             this.groupBoxBrush1.Padding = new System.Windows.Forms.Padding(10, 2, 3, 2);
@@ -311,10 +312,10 @@
             // textBoxBrush1
             // 
             this.textBoxBrush1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.textBoxBrush1.Location = new System.Drawing.Point(91, 2);
+            this.textBoxBrush1.Location = new System.Drawing.Point(90, 2);
             this.textBoxBrush1.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.textBoxBrush1.Name = "textBoxBrush1";
-            this.textBoxBrush1.Size = new System.Drawing.Size(1340, 38);
+            this.textBoxBrush1.Size = new System.Drawing.Size(1342, 38);
             this.textBoxBrush1.TabIndex = 1;
             this.toolTip.SetToolTip(this.textBoxBrush1, "File for brush 1.");
             // 
@@ -324,10 +325,10 @@
             this.buttonFileBrowse1.AutoSize = true;
             this.buttonFileBrowse1.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.buttonFileBrowse1.BackColor = System.Drawing.SystemColors.Control;
-            this.buttonFileBrowse1.Location = new System.Drawing.Point(1437, 2);
+            this.buttonFileBrowse1.Location = new System.Drawing.Point(1438, 2);
             this.buttonFileBrowse1.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.buttonFileBrowse1.Name = "buttonFileBrowse1";
-            this.buttonFileBrowse1.Size = new System.Drawing.Size(119, 42);
+            this.buttonFileBrowse1.Size = new System.Drawing.Size(118, 42);
             this.buttonFileBrowse1.TabIndex = 2;
             this.buttonFileBrowse1.Text = "Browse";
             this.toolTip.SetToolTip(this.buttonFileBrowse1, "Browse for file for  brush 1.");
@@ -342,7 +343,7 @@
             this.labelFile1.BackColor = System.Drawing.SystemColors.Control;
             this.labelFile1.Location = new System.Drawing.Point(3, 0);
             this.labelFile1.Name = "labelFile1";
-            this.labelFile1.Size = new System.Drawing.Size(82, 46);
+            this.labelFile1.Size = new System.Drawing.Size(81, 46);
             this.labelFile1.TabIndex = 0;
             this.labelFile1.Text = "Path:";
             this.labelFile1.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -364,7 +365,7 @@
             this.groupBoxBrush2.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.groupBoxBrush2.Controls.Add(this.tableLayoutPanelGroupBrush2);
             this.groupBoxBrush2.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.groupBoxBrush2.Location = new System.Drawing.Point(5, 173);
+            this.groupBoxBrush2.Location = new System.Drawing.Point(5, 181);
             this.groupBoxBrush2.Margin = new System.Windows.Forms.Padding(5, 10, 5, 10);
             this.groupBoxBrush2.Name = "groupBoxBrush2";
             this.groupBoxBrush2.Padding = new System.Windows.Forms.Padding(10, 2, 3, 2);
@@ -421,7 +422,7 @@
             this.labelFile2.BackColor = System.Drawing.SystemColors.Control;
             this.labelFile2.Location = new System.Drawing.Point(3, 0);
             this.labelFile2.Name = "labelFile2";
-            this.labelFile2.Size = new System.Drawing.Size(82, 46);
+            this.labelFile2.Size = new System.Drawing.Size(81, 46);
             this.labelFile2.TabIndex = 0;
             this.labelFile2.Text = "Path:";
             this.labelFile2.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -430,10 +431,10 @@
             // textBoxCrush2
             // 
             this.textBoxCrush2.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.textBoxCrush2.Location = new System.Drawing.Point(91, 2);
+            this.textBoxCrush2.Location = new System.Drawing.Point(90, 2);
             this.textBoxCrush2.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.textBoxCrush2.Name = "textBoxCrush2";
-            this.textBoxCrush2.Size = new System.Drawing.Size(1340, 38);
+            this.textBoxCrush2.Size = new System.Drawing.Size(1342, 38);
             this.textBoxCrush2.TabIndex = 1;
             this.toolTip.SetToolTip(this.textBoxCrush2, "File for brush 2.");
             // 
@@ -443,10 +444,10 @@
             this.buttonBrowseFile2.AutoSize = true;
             this.buttonBrowseFile2.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.buttonBrowseFile2.BackColor = System.Drawing.SystemColors.Control;
-            this.buttonBrowseFile2.Location = new System.Drawing.Point(1437, 2);
+            this.buttonBrowseFile2.Location = new System.Drawing.Point(1438, 2);
             this.buttonBrowseFile2.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.buttonBrowseFile2.Name = "buttonBrowseFile2";
-            this.buttonBrowseFile2.Size = new System.Drawing.Size(119, 42);
+            this.buttonBrowseFile2.Size = new System.Drawing.Size(118, 42);
             this.buttonBrowseFile2.TabIndex = 2;
             this.buttonBrowseFile2.Text = "Browse";
             this.toolTip.SetToolTip(this.buttonBrowseFile2, "Browse file for  brush 2\r\n..");
@@ -467,10 +468,10 @@
             // 
             this.textBoxInfo.ContextMenuStrip = this.contextMenuStrip1;
             this.textBoxInfo.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.textBoxInfo.Location = new System.Drawing.Point(3, 276);
+            this.textBoxInfo.Location = new System.Drawing.Point(3, 284);
             this.textBoxInfo.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.textBoxInfo.Name = "textBoxInfo";
-            this.textBoxInfo.Size = new System.Drawing.Size(1582, 934);
+            this.textBoxInfo.Size = new System.Drawing.Size(1582, 926);
             this.textBoxInfo.TabIndex = 3;
             this.textBoxInfo.Text = "";
             // 
@@ -552,10 +553,10 @@
             this.flowLayoutPanelButtons.Controls.Add(this.buttonCompare);
             this.flowLayoutPanelButtons.Controls.Add(this.button1);
             this.flowLayoutPanelButtons.Controls.Add(this.buttonQuit);
-            this.flowLayoutPanelButtons.Location = new System.Drawing.Point(347, 1214);
+            this.flowLayoutPanelButtons.Location = new System.Drawing.Point(350, 1214);
             this.flowLayoutPanelButtons.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.flowLayoutPanelButtons.Name = "flowLayoutPanelButtons";
-            this.flowLayoutPanelButtons.Size = new System.Drawing.Size(893, 46);
+            this.flowLayoutPanelButtons.Size = new System.Drawing.Size(888, 46);
             this.flowLayoutPanelButtons.TabIndex = 0;
             this.flowLayoutPanelButtons.WrapContents = false;
             // 
@@ -567,7 +568,7 @@
             this.buttonProcess1.Location = new System.Drawing.Point(3, 2);
             this.buttonProcess1.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.buttonProcess1.Name = "buttonProcess1";
-            this.buttonProcess1.Size = new System.Drawing.Size(231, 42);
+            this.buttonProcess1.Size = new System.Drawing.Size(230, 42);
             this.buttonProcess1.TabIndex = 0;
             this.buttonProcess1.Text = "Process Brush 1";
             this.toolTip.SetToolTip(this.buttonProcess1, "Process Brush 1.");
@@ -579,10 +580,10 @@
             this.buttonProcess2.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.buttonProcess2.AutoSize = true;
             this.buttonProcess2.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.buttonProcess2.Location = new System.Drawing.Point(240, 2);
+            this.buttonProcess2.Location = new System.Drawing.Point(239, 2);
             this.buttonProcess2.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.buttonProcess2.Name = "buttonProcess2";
-            this.buttonProcess2.Size = new System.Drawing.Size(231, 42);
+            this.buttonProcess2.Size = new System.Drawing.Size(230, 42);
             this.buttonProcess2.TabIndex = 1;
             this.buttonProcess2.Text = "Process Brush 2";
             this.toolTip.SetToolTip(this.buttonProcess2, "Process brush 2.");
@@ -594,10 +595,10 @@
             this.buttonCompare.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.buttonCompare.AutoSize = true;
             this.buttonCompare.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.buttonCompare.Location = new System.Drawing.Point(477, 2);
+            this.buttonCompare.Location = new System.Drawing.Point(475, 2);
             this.buttonCompare.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.buttonCompare.Name = "buttonCompare";
-            this.buttonCompare.Size = new System.Drawing.Size(164, 42);
+            this.buttonCompare.Size = new System.Drawing.Size(163, 42);
             this.buttonCompare.TabIndex = 2;
             this.buttonCompare.Text = "Compare ≠";
             this.toolTip.SetToolTip(this.buttonCompare, "Compare the brushes, showing\r\n only differences.");
@@ -609,10 +610,10 @@
             this.button1.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.button1.AutoSize = true;
             this.button1.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.button1.Location = new System.Drawing.Point(647, 2);
+            this.button1.Location = new System.Drawing.Point(644, 2);
             this.button1.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(159, 42);
+            this.button1.Size = new System.Drawing.Size(158, 42);
             this.button1.TabIndex = 4;
             this.button1.Text = "Compare *";
             this.toolTip.SetToolTip(this.button1, "Compare the brushes, showing all values.");
@@ -624,10 +625,10 @@
             this.buttonQuit.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.buttonQuit.AutoSize = true;
             this.buttonQuit.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.buttonQuit.Location = new System.Drawing.Point(812, 2);
+            this.buttonQuit.Location = new System.Drawing.Point(808, 2);
             this.buttonQuit.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.buttonQuit.Name = "buttonQuit";
-            this.buttonQuit.Size = new System.Drawing.Size(78, 42);
+            this.buttonQuit.Size = new System.Drawing.Size(77, 42);
             this.buttonQuit.TabIndex = 3;
             this.buttonQuit.Text = "Quit";
             this.toolTip.SetToolTip(this.buttonQuit, "Quit the application.");
