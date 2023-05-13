@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using KEUtils.Utils;
+using Newtonsoft.Json;
 using System;
 using System.Drawing;
 using System.Drawing.Drawing2D;
@@ -27,7 +28,7 @@ namespace RebelleBrushInfo {
                     DeserializeObject<RebelleCurve>(json);
                 return newConfig;
             } catch (Exception ex) {
-                Utils.Utils.excMsg("Error reading configuration from "
+                Utils.excMsg("Error reading configuration from "
                      + json, ex);
                 return null;
             }

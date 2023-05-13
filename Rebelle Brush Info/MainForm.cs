@@ -2,7 +2,10 @@
 //#define replaceDoctype
 //#define TEST
 
-using About;
+using KEUtils.About;
+using KEUtils.ScrolledHTML;
+using KEUtils.ScrolledHTML2;
+using KEUtils.Utils;
 using MetadataExtractor;
 using RebelleUtils;
 using System;
@@ -10,6 +13,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
+using System.Reflection;
 using System.Text;
 using System.Windows.Forms;
 
@@ -20,7 +24,7 @@ namespace RebelleBrushInfo {
         public static readonly int PROCESS_TIMEOUT = 5000; // ms
         public static readonly String NL = Environment.NewLine;
         public static int ImageWidth { get; set; } = 256;
-        private static ScrolledHTMLDialog overviewDlg;
+        private static ScrolledHTMLDialog2 overviewDlg;
         //private static ScrolledRichTextDialog textDlg;
         private static FindDialog findDlg;
 
@@ -59,7 +63,7 @@ namespace RebelleBrushInfo {
                     textBoxBrush = textBoxCrush2;
                     break;
                 default:
-                    Utils.Utils.errMsg("Invalid fileType ("
+                    KEUtils.Utils.Utils.errMsg("Invalid fileType ("
                         + fileType + ") for processBrush");
                     return;
             }
@@ -68,19 +72,19 @@ namespace RebelleBrushInfo {
             String fileName = textBoxBrush.Text;
             if (fileName == null || fileName.Length == 0) {
                 registerOutput(fileType, info, header, paramsList);
-                Utils.Utils.errMsg("Brush " + nBrush + " is not defined");
+                Utils.errMsg("Brush " + nBrush + " is not defined");
                 return;
             }
             if (!File.Exists(fileName)) {
                 registerOutput(fileType, info, header, paramsList);
-                Utils.Utils.errMsg(fileName + " does not exist");
+                Utils.errMsg(fileName + " does not exist");
                 return;
             }
             // Get the selected brush fileName
             string brushName = Path.GetFileNameWithoutExtension(fileName);
             if (brushName == null | brushName.Length == 0) {
                 registerOutput(fileType, info, header, paramsList);
-                Utils.Utils.errMsg("Brush not specified");
+                Utils.errMsg("Brush not specified");
                 return;
             }
             info += brushName + NL;
@@ -161,7 +165,7 @@ namespace RebelleBrushInfo {
                 processBrush(FileType.Brush1, false);
                 paramsList = paramsList1;
                 if (paramsList1.Count == 0) {
-                    Utils.Utils.errMsg("Did not get params for Brush 1");
+                    Utils.errMsg("Did not get params for Brush 1");
                     return;
                 }
                 paramsList = paramsList1;
@@ -169,7 +173,7 @@ namespace RebelleBrushInfo {
                 // Process brush 2
                 processBrush(FileType.Brush2, false);
                 if (paramsList2.Count == 0) {
-                    Utils.Utils.errMsg("Did not get params for Brush 2");
+                    Utils.errMsg("Did not get params for Brush 2");
                     return;
                 }
                 paramsList = paramsList2;
@@ -219,13 +223,13 @@ namespace RebelleBrushInfo {
             // Process brush 1
             processBrush(FileType.Brush1, false);
             if (paramsList1.Count == 0) {
-                Utils.Utils.errMsg("Did not get params for Brush 1");
+                Utils.errMsg("Did not get params for Brush 1");
                 return;
             }
             // Process brush 2
             processBrush(FileType.Brush2, false);
             if (paramsList2.Count == 0) {
-                Utils.Utils.errMsg("Did not get params for Brush 2");
+                Utils.errMsg("Did not get params for Brush 2");
                 return;
             }
 
@@ -262,7 +266,7 @@ namespace RebelleBrushInfo {
                 bm = (Bitmap)Image.FromStream(ms);
                 bm = new Bitmap(bm, new Size(ImageWidth, ImageWidth));
             }
-            return Utils.RTFUtils.imageRtf(textBoxInfo, bm);
+            return RTFUtils.imageRtf(textBoxInfo, bm);
         }
 
         public static string convertImageToBase64(Bitmap bm) {
@@ -461,15 +465,15 @@ namespace RebelleBrushInfo {
                 appendInfo("    ");
                 String rtf;
                 foreach (Bitmap bm in images) {
-                    rtf = Utils.RTFUtils.imageRtf(textBoxInfo, bm);
+                    rtf = RTFUtils.imageRtf(textBoxInfo, bm);
                     if (!String.IsNullOrEmpty(rtf)) {
-                        Utils.RTFUtils.appendRtb(textBoxInfo, rtf);
+                        RTFUtils.appendRtb(textBoxInfo, rtf);
                         appendInfo("    ");
                     }
                 }
                 appendInfo(NL);
             } catch (Exception ex) {
-                Utils.Utils.excMsg("Error processing effector images", ex);
+                Utils.excMsg("Error processing effector images", ex);
             }
         }
 
@@ -490,7 +494,6 @@ namespace RebelleBrushInfo {
         /// </summary>
         /// <param name="text">The text containing embedded images.</param>
         private void appendInfoWithImages(string text) {
-            string info = "";
             // Parse the info to get the images so they can be inserted
             int evenodd = 1;
             if (text.StartsWith(BrushParam.Delim.ToString())) {
@@ -506,10 +509,10 @@ namespace RebelleBrushInfo {
                     appendInfo(NL + "    ");
                     try {
                         string rtbImageString = generateRtfImage(token);
-                        Utils.RTFUtils.insertRtb(textBoxInfo, rtbImageString);
+                        RTFUtils.insertRtb(textBoxInfo, rtbImageString);
                     } catch (Exception ex) {
                         string msg = "Error parsing image";
-                        //Utils.Utils.excMsg(msg, ex);
+                        //Utils.excMsg(msg, ex);
                         appendInfo("!!! " + msg + NL);
                         //appendInfo("    " + ex.ToString());
                         //appendInfo("    " + ex.GetType());
@@ -630,8 +633,9 @@ namespace RebelleBrushInfo {
             // Create, show, or set visible the overview dialog as appropriate
             if (overviewDlg == null) {
                 MainForm app = (MainForm)FindForm().FindForm();
-                overviewDlg = new ScrolledHTMLDialog(
-                    Utils.Utils.getDpiAdjustedSize(app, new Size(800, 600)));
+                overviewDlg = new ScrolledHTMLDialog2(
+                    Utils.getDpiAdjustedSize(app, new Size(800, 600)),
+                    "Overview", @"Help\Overview.html");
                 overviewDlg.Show();
             } else {
                 overviewDlg.Visible = true;
@@ -642,12 +646,19 @@ namespace RebelleBrushInfo {
             try {
                 Process.Start("https://kenevans.net/opensource/RebelleBrushInfo/Help/Overview.html");
             } catch (Exception ex) {
-                Utils.Utils.excMsg("Failed to start browser", ex);
+                Utils.excMsg("Failed to start browser", ex);
             }
         }
 
         private void OnAboutClick(object sender, EventArgs e) {
-            AboutBox dlg = new AboutBox();
+            Assembly assembly = Assembly.GetExecutingAssembly();
+            Image image = null;
+            try {
+                image = Image.FromFile(@".\Help\RebelleBrushInfo.256x256.png");
+            } catch (Exception ex) {
+                Utils.excMsg("Failed to get AboutBox image", ex);
+            }
+            AboutBox dlg = new AboutBox(image, assembly);
             dlg.ShowDialog();
         }
 
@@ -671,7 +682,7 @@ namespace RebelleBrushInfo {
                     textBoxInfo.SaveFile(dlg.FileName,
                         RichTextBoxStreamType.RichText);
                 } catch (Exception ex) {
-                    Utils.Utils.excMsg("Error saving RTF", ex);
+                    Utils.excMsg("Error saving RTF", ex);
                 }
             }
         }
@@ -703,7 +714,7 @@ namespace RebelleBrushInfo {
             //if (textDlg == null) {
             //    MainForm app = (MainForm)FindForm().FindForm();
             //    textDlg = new ScrolledRichTextDialog(
-            //        Utils.Utils.getDpiAdjustedSize(app, new Size(600, 400)),
+            //        Utils.getDpiAdjustedSize(app, new Size(600, 400)),
             //        info);
             //    textDlg.Text = "Tool Hierarchy";
             //    textDlg.Show();

@@ -1,5 +1,6 @@
 ﻿//#define USE_HASH_FOR_IMAGE
 
+using KEUtils.Utils;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
@@ -46,7 +47,7 @@ namespace RebelleBrushInfo {
                                 Children.Add(param);
                                 break;
                             default:
-                                Utils.Utils.warnMsg("Unexpected token,Type "
+                                Utils.warnMsg("Unexpected token,Type "
                                     + token.Type);
                                 break;
                         }
@@ -75,7 +76,7 @@ namespace RebelleBrushInfo {
                                 Children.Add(param);
                                 break;
                             default:
-                                Utils.Utils.warnMsg("Unexpected token,Type "
+                                Utils.warnMsg("Unexpected token,Type "
                                     + token.Type);
                                 break;
                         }
